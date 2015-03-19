@@ -1,0 +1,12 @@
+This SVG project contains more than 1,000 SVG filter-based code samples that were tested in Chrome 15 on a Macbook (OSX 10.6.8).  **Please keep in mind that these code samples are primarily for entertainment.** Most of these code samples illustrate the SVG turbulence filter (sometimes in conjunction with other SVG filters), and some samples are more aesthetically appealing than others (YMMV).  The code samples were created in an arbitrary fashion, and at some point they will probably be tested on an iPad3, an Asus Prime Android ICS tablet, and a Nexus S 4G smart phone with Android ICS.
+
+As you will see, there are many similar code samples (think "swatches"), and after applying the filter effects the samples often "map" to similar effects, which tends to obscure the visual effects of the original non-filter samples.  This is probably the main drawback of these code samples, and you might need to wade through the code samples in order to find the samples that interest you.  For your convenience, some of the original SVG code samples (i.e., without filters) are included in this code project.  For instance, the 3D surfaces in "3DSurfacesWithoutFilters" do not contain filter effects, and so you can compare these code samples with their filter-based counterparts.
+
+Another point is that one of the revisions that has yet to be made involves setting individual style-related attributes rather than setting the style attribute as a concatenated string of style-related attributes; this is due to the fact that these code samples were written quite some time ago (circa 2003), around the time that my SVG book was written.
+
+As a final catch-all disclaimer/note, please keep in mind that 1) the code samples do not reflect best practices; 2) the code samples are not intended to be used as production-ready code; 3) some code samples are extremely memory/CPU-intensive; 4) refactoring the code is definitely recommended; and 5) there are bound to be (hopefully minor) errors in some of the code samples.
+
+With these caveats in mind, hopefully you will have fun browsing through these graphics code samples, and you can also get additional SVG (non-filter) code samples here:
+http://code.google.com/p/svg-graphics/
+
+Enjoy!
