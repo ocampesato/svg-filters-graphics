@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
+ "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+
+<svg xmlns="http://www.w3.org/2000/svg" 
+     xmlns:xlink="http://www.w3.org/1999/xlink" 
+     width="100%" height="100%"> 
+  <defs>
+  <filter id="turbFilter4" in="SourceImage" 
+           filterUnits="objectBoundingBox">
+      <feTurbulence baseFrequency="0.05" numOctaves="0" 
+                    result="turbulenceOut1"/> 
+        <feDisplacementMap in="SourceGraphic" in2="turbulenceOut1" 
+                           xChannelSelector="B" yChannelSelector="B"
+                           scale="20"/> 
+   </filter>
+
+     <radialGradient id="blueCircle" 
+                     gradientUnits="objectBoundingBox"
+                     fx="30%" fy="30%">
+       <stop offset="0%"   style="stop-color:#FFFFFF"/>
+       <stop offset="40%"  style="stop-color:#0000AA"/>
+       <stop offset="100%" style="stop-color:#000066"/>
+     </radialGradient>
+      
+     <radialGradient id="redCircle" 
+                     gradientUnits="objectBoundingBox"
+                     fx="30%" fy="30%">
+       <stop offset="0%"   style="stop-color:#FFFFFF"/>
+       <stop offset="40%"  style="stop-color:#AA0000"/>
+       <stop offset="100%" style="stop-color:#660000"/>
+     </radialGradient>
+      
+     <circle id="3DBlueCircle"  
+             cx="0" cy="0" r="160" 
+             style="fill:url(#blueCircle)"/>
+      
+     <ellipse id="3DBlueEllipse2" 
+              cx="0" cy="0" rx="140" ry="160"
+             style="fill:url(#redCircle)"/>
+      
+     <ellipse id="3DBlueEllipse3" 
+              cx="0" cy="0" rx="120" ry="160"
+             style="fill:url(#blueCircle)"/>
+      
+     <ellipse id="3DBlueEllipse4" 
+              cx="0" cy="0" rx="100" ry="160"
+             style="fill:url(#redCircle)"/>
+      
+     <ellipse id="3DBlueEllipse5" 
+              cx="0" cy="0" rx="80" ry="160"
+             style="fill:url(#blueCircle)"/>
+      
+     <ellipse id="3DBlueEllipse6" 
+              cx="0" cy="0" rx="60" ry="160"
+             style="fill:url(#redCircle)"/>
+      
+     <ellipse id="3DBlueellipse7" 
+              cx="0" cy="0" rx="40" ry="160"
+             style="fill:url(#blueCircle)"/>
+  </defs>
+
+<g id="gc" transform="translate(10,10)" 
+   filter="url(#turbFilter4)">  
+   <use xlink:href="#3DBlueCircle"   x="200" y="200"/>
+   <use xlink:href="#3DBlueEllipse1" x="180" y="200"/>
+   <use xlink:href="#3DBlueEllipse2" x="160" y="200"/>
+   <use xlink:href="#3DBlueEllipse3" x="140" y="200"/>
+   <use xlink:href="#3DBlueEllipse4" x="120" y="200"/>
+   <use xlink:href="#3DBlueEllipse5" x="100" y="200"/>
+   <use xlink:href="#3DBlueEllipse6" x="80"  y="200"/>
+   <use xlink:href="#3DBlueEllipse7" x="60"  y="200"/>
+</g>
+</svg>
+

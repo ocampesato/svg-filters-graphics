@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN" 
+  "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+
+<svg xmlns="http://www.w3.org/2000/svg" 
+     xmlns:xlink="http://www.w3.org/1999/xlink"> 
+ <defs>
+  <filter id="turbFilter4" in="SourceImage" 
+           filterUnits="objectBoundingBox">
+      <feTurbulence baseFrequency="0.25" numOctaves="2" 
+                    result="turbulenceOut1"/> 
+        <feDisplacementMap in="SourceGraphic" in2="turbulenceOut1" 
+                           xChannelSelector="B" yChannelSelector="B"
+                           scale="10"/> 
+   </filter>
+
+  <pattern id="checkerPattern1" 
+           width="10" height="10"
+           patternUnits="userSpaceOnUse">
+     <rect fill="blue"
+           x="0"  y="0"  width="5" height="5"/> 
+
+     <rect fill="red"
+           x="5" y="0"  width="5" height="5"/> 
+
+     <rect fill="red"
+           x="0"  y="5" width="5" height="5"/> 
+
+     <rect fill="blue"
+           x="5" y="5" width="5" height="5"/> 
+  </pattern>
+
+  <line id="line1"
+       x1="0" y1="-80" x2="300" y2="-150"
+       stroke="blue" stroke-width="2"/>
+
+  <line id="line2"
+       x1="100" y1="-30" x2="300" y2="-150"
+       stroke="blue" stroke-width="2"/>
+
+  <line id="line3"
+       x1="0" y1="0" x2="300" y2="-150"
+       stroke-dasharray="4 4 4 4"
+       stroke="blue" stroke-width="2"/>
+
+  <line id="line4"
+       x1="100" y1="50" x2="300" y2="-150"
+       stroke="blue" stroke-width="2"/>
+
+  <path id="frontFace1"
+        d="m0,0 l0,-80 
+                a200,200 0 0,0 100,50
+                a200,200 0 0,0 0,80
+                a200,200 0 0,1 -100,-50
+                l0,-80"
+        fill="url(#checkerPattern1)" 
+        stroke="blue" stroke-width="2"/>
+</defs>
+
+<g id="gc" transform="translate(50,200)" 
+   filter="url(#turbFilter4)">  
+   <use xlink:href="#line3"         x="0"  y="0"/>
+   <use xlink:href="#line4"         x="0"  y="0"/>
+   <use xlink:href="#line1"         x="0"  y="0"/>
+   <use xlink:href="#line2"         x="0"  y="0"/>
+   <use xlink:href="#frontFace1"    x="0"  y="0"/>
+</g>
+</svg>
+

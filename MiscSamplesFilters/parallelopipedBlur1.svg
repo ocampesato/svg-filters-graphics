@@ -1,0 +1,286 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN" 
+  "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+
+<svg width="100%" height="100%" onload="init(evt)"
+     xmlns:xlink="http://www.w3.org/1999/xlink" 
+     xmlns="http://www.w3.org/2000/svg">
+
+  <script type="text/ecmascript"> 
+    <![CDATA[
+     var basePointX      = 20;
+     var basePointY      = 20;
+     var anchorX         = 0;
+     var anchorY         = 200;
+     var currentX        = 0.0;
+     var currentY        = 0.0;
+     var rectHeight      = 80;
+     var rectWidth       = 180;
+     var slantLength     = 100;
+     var slantAngle      = 20;
+     var slantX          = slantLength*Math.cos(
+                                  slantAngle*Math.PI/180);
+     var slantY          = slantLength*Math.sin(
+                                  slantAngle*Math.PI/180);
+     var style           = "";
+     var points          = "";
+     var fillColors      = ['red','#880088','blue','yellow'];
+     var fillCount       = 4;
+     var strokeColors    = ['#880088','blue','yellow','red'];
+     var strokeCount     = 4;
+     var strokeWidths    = [1, 4, 8];
+     var widthCount      = 3;
+     var dashStyles      = ["4 4 4 4", "2 2 2 2", "1 1 1 1"];
+     var dashCount       = 3;
+     var tVertexCount    = 3;
+     var position        = 0;
+     var centerX         = 0;
+     var centerY         = 0;
+     var rowCount        = 2;
+     var colCount        = 2;
+     var hInterGap       = 250;
+     var vInterGap       = 150;
+     var vertexCount     = 4;
+     var pGonXPts        = Array(vertexCount);
+     var pGonYPts        = Array(vertexCount);
+     var nestedXPts      = Array(vertexCount);
+     var nestedYPts      = Array(vertexCount);
+     var upperLeftXPts   = Array(1);
+     var upperLeftYPts   = Array(1);
+ 
+     var lineNode        = null;
+     var nestedNode      = null;
+     var topNode         = null;
+     var frontNode       = null;
+     var rightNode       = null;
+     var svgDocument     = null;
+     var gcNode          = null;
+     var svgNS           = "http://www.w3.org/2000/svg";
+ 
+     function init(evt) {
+        svgDocument = evt.target.ownerDocument; 
+        gcNode = svgDocument.getElementById("gc")
+
+        drawParallelopipeds();
+     }
+
+     function updateCornerVertices(row,col) {
+        upperLeftXPts[0] = anchorX+col*hInterGap;
+        upperLeftYPts[0] = anchorY-row*vInterGap;
+     }
+
+     function drawParallelopipeds() {
+        for(var row=0; row<rowCount; row++) {
+           for(var col=0; col<colCount; col++) {
+              updateCornerVertices(row, col);
+
+              position = row+col;
+              if( (col % 2 == 0) && (row % 2 == 1) ) {
+                 updateCornerVertices(row, col);
+              }
+
+              drawFrontFace(); 
+              drawTopFace();
+              drawRightFace(); 
+           }
+        }
+     } // drawPerspectiveObject
+
+     function drawFrontFace() {
+        // draw front face (clockwise)...
+        pGonXPts[0] = upperLeftXPts[0];
+        pGonYPts[0] = upperLeftYPts[0];
+
+        pGonXPts[1] = upperLeftXPts[0]+rectWidth;
+        pGonYPts[1] = upperLeftYPts[0];
+
+        pGonXPts[2] = upperLeftXPts[0]+rectWidth;
+        pGonYPts[2] = upperLeftYPts[0]+rectHeight;
+
+        pGonXPts[3] = upperLeftXPts[0];
+        pGonYPts[3] = upperLeftYPts[0]+rectHeight;
+
+        points = "";
+        for(var v=0; v<vertexCount; v++) {
+           points += pGonXPts[v]+","+pGonYPts[v]+" ";
+        }
+
+        style  = "fill:"+fillColors[position%fillCount];
+        style += ";stroke:"+strokeColors[position%strokeCount];
+        style += ";stroke-dasharray:"+dashStyles[position%dashCount];
+        style += ";stroke-width:"+strokeWidths[position%widthCount];
+  
+        pGonNode = svgDocument.createElementNS(svgNS, "polygon");
+        pGonNode.setAttribute("filter","url(#blurFilter1)"); 
+        pGonNode.setAttribute("style", style);
+        pGonNode.setAttribute("points",points);
+        gcNode.appendChild(pGonNode);
+
+        addNestedPGram(3);
+        addCenterLines();
+     }
+
+     function drawTopFace() {
+        // draw top face (counter clockwise)...
+        pGonXPts[0] = upperLeftXPts[0];
+        pGonYPts[0] = upperLeftYPts[0];
+
+        pGonXPts[1] = upperLeftXPts[0]+rectWidth;
+        pGonYPts[1] = upperLeftYPts[0];
+
+        pGonXPts[2] = upperLeftXPts[0]+rectWidth+slantX;
+        pGonYPts[2] = upperLeftYPts[0]-slantY;
+
+        pGonXPts[3] = upperLeftXPts[0]+slantX;
+        pGonYPts[3] = upperLeftYPts[0]-slantY;
+
+        points = "";
+        for(var v=0; v<vertexCount; v++) {
+           points += pGonXPts[v]+","+pGonYPts[v]+" ";
+        }
+
+        style  = "fill:"+fillColors[position%fillCount];
+        style += ";stroke:"+strokeColors[position%strokeCount];
+        style += ";stroke-dasharray:"+dashStyles[position%dashCount];
+        style += ";stroke-width:"+strokeWidths[position%widthCount];
+  
+        pGonNode = svgDocument.createElementNS(svgNS, "polygon");
+        pGonNode.setAttribute("filter","url(#blurFilter1)"); 
+        pGonNode.setAttribute("style", style);
+        pGonNode.setAttribute("points",points);
+        gcNode.appendChild(pGonNode);
+
+        addNestedPGram(3);
+        addCenterLines();
+     }
+
+     function drawRightFace() {
+        // draw right face (counter clockwise)...
+        pGonXPts[0] = upperLeftXPts[0]+rectWidth;
+        pGonYPts[0] = upperLeftYPts[0];
+
+        pGonXPts[1] = upperLeftXPts[0]+rectWidth+slantX;
+        pGonYPts[1] = upperLeftYPts[0]-slantY;
+
+        pGonXPts[2] = upperLeftXPts[0]+rectWidth+slantX;
+        pGonYPts[2] = upperLeftYPts[0]-slantY+rectHeight;
+
+        pGonXPts[3] = upperLeftXPts[0]+rectWidth;
+        pGonYPts[3] = upperLeftYPts[0]+rectHeight;
+
+        points = "";
+        for(var v=0; v<vertexCount; v++) {
+           points += pGonXPts[v]+","+pGonYPts[v]+" ";
+        }
+
+        style  = "fill:"+fillColors[position%fillCount];
+        style += ";stroke:"+strokeColors[position%strokeCount];
+        style += ";stroke-dasharray:"+dashStyles[position%dashCount];
+        style += ";stroke-width:"+strokeWidths[position%strokeCount];
+  
+        pGonNode = svgDocument.createElementNS(svgNS, "polygon");
+        pGonNode.setAttribute("style", style);
+        pGonNode.setAttribute("points",points);
+        pGonNode.setAttribute("filter","url(#blurFilter1)"); 
+        gcNode.appendChild(pGonNode);
+
+        addNestedPGram(4);
+        addDiagonalLines();
+     }
+
+     function addNestedPGram(vCount) {
+        points = "";
+
+        for(var v=0; v<vCount; v++) {
+           nestedXPts[v] = (pGonXPts[v]+pGonXPts[(v+1)%vCount])/2;
+           nestedYPts[v] = (pGonYPts[v]+pGonYPts[(v+1)%vCount])/2;
+
+           points += nestedXPts[v]+","+nestedYPts[v]+" ";
+        }
+
+        style  = "fill:"+fillColors[(position+1)%fillCount];
+        style += ";stroke:"+strokeColors[position%strokeCount];
+        style += ";stroke-dasharray:"+dashStyles[position%dashCount];
+        style += ";stroke-width:"+strokeWidths[position%strokeCount];
+  
+        nestedNode = svgDocument.createElementNS(svgNS, "polygon");
+        nestedNode.setAttribute("style", style);
+        nestedNode.setAttribute("points",points);
+        gcNode.appendChild(nestedNode);
+     }
+
+     function addDiagonalLines() {
+        style  = "fill:"+fillColors[(position+1)%fillCount];
+        style += ";stroke:"+strokeColors[(position+1)%strokeCount];
+        style += ";stroke-dasharray:"+dashStyles[position%dashCount];
+        style += ";stroke-width:"+strokeWidths[position%strokeCount];
+  
+        lineNode = svgDocument.createElementNS(svgNS, "line");
+        lineNode.setAttribute("style",style);
+        lineNode.setAttribute("x1",   pGonXPts[0]);
+        lineNode.setAttribute("y1",   pGonYPts[0]);
+        lineNode.setAttribute("x2",   pGonXPts[2]);
+        lineNode.setAttribute("y2",   pGonYPts[2]);
+        gcNode.appendChild(lineNode);
+
+        lineNode = svgDocument.createElementNS(svgNS, "line");
+        lineNode.setAttribute("style",style);
+        lineNode.setAttribute("x1",   pGonXPts[1]);
+        lineNode.setAttribute("y1",   pGonYPts[1]);
+        lineNode.setAttribute("x2",   pGonXPts[3]);
+        lineNode.setAttribute("y2",   pGonYPts[3]);
+        gcNode.appendChild(lineNode);
+     }
+
+     function addCenterLines() {
+        centerX = 0; centerY = 0;
+
+        for(var v=0; v<vertexCount; v++) {
+           centerX += pGonXPts[v];
+           centerY += pGonYPts[v];
+        }
+
+        centerX /= vertexCount; 
+        centerY /= vertexCount;
+
+        style  = "fill:"+fillColors[(position+1)%fillCount];
+        style += ";stroke:"+strokeColors[(position+1)%strokeCount];
+        style += ";stroke-dasharray:"+dashStyles[(position+1)%dashCount];
+        style += ";stroke-width:"+strokeWidths[(position+1)%strokeCount];
+  
+        for(var v=0; v<vertexCount; v++) {
+           lineNode = svgDocument.createElementNS(svgNS, "line");
+           lineNode.setAttribute("style",style);
+           lineNode.setAttribute("x1",   centerX);
+           lineNode.setAttribute("y1",   centerY);
+           lineNode.setAttribute("x2",   pGonXPts[v]);
+           lineNode.setAttribute("y2",   pGonYPts[v]);
+           gcNode.appendChild(lineNode);
+        }
+     }
+  ]]> </script>
+
+<!-- ============================ -->
+<defs>
+  <filter
+     id="blurFilter1"
+     filterUnits="objectBoundingBox"
+     x="0" y="0" 
+     width="100%" height="100%"> 
+     <feGaussianBlur stdDeviation="8"/>
+  </filter>
+</defs>
+
+<g id="gc" transform="translate(20,20)"> 
+  <rect x="0" y="0" 
+        width="800" height="500" 
+        fill="none" stroke="none"/>
+</g>
+
+<g id="gc" transform="translate(20,20)"> 
+  <rect x="0" y="0" 
+        width="800" height="500" 
+        fill="none" stroke="none"/>
+</g>
+</svg>
+

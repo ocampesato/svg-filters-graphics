@@ -1,0 +1,84 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN" 
+  "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+
+<svg width="100%" height="100%" onload="init(evt)"
+     xmlns:xlink="http://www.w3.org/1999/xlink" 
+     xmlns="http://www.w3.org/2000/svg">
+
+  <script type="text/ecmascript"> 
+    <![CDATA[
+     var basePointX      = 300;
+     var basePointY      = 250;
+     var minorAxis       = 50;
+     var majorAxis       = 100;
+     var style           = "";
+     var fillColors      = ['red','#880088','blue','yellow'];
+     var fillCount       = 4;
+     var strokeColors    = ['#880088','white','yellow','red'];
+     var strokeCount     = 4;
+     var strokeWidths    = [1, 4, 8];
+     var widthCount      = 3;
+     var dashStyles      = ["4 4 4 4", "2 2 2 2", "1 1 1 1"];
+     var dashCount       = 3;
+     var cylinderHeight  = 540;
+     var Constant        = 0.25;
+     var radius          = 0;
+     var offsetX         = 0;
+     var offsetY         = 0;
+ 
+     var ellipseNode     = null;
+     var svgDocument     = null;
+     var gcNode          = null;
+     var svgNS           = "http://www.w3.org/2000/svg";
+ 
+     function init(evt) {
+        svgDocument = evt.target.ownerDocument; 
+        gcNode = svgDocument.getElementById("gc")
+
+        drawSpiral();
+     }
+
+     function drawSpiral() {
+        style  = "fill:"+fillColors[majorAxis%fillCount];
+        style += ";stroke:"+strokeColors[majorAxis%strokeCount];
+        style += ";stroke-dasharray:"+dashStyles[majorAxis%dashCount];
+        style += ";stroke-width:"+strokeWidths[majorAxis%widthCount];
+
+        for(var z=0; z<cylinderHeight; z++) {
+           radius = Constant*z;
+     
+           offsetX = radius*Math.cos(z*Math.PI/180);
+           offsetY = radius*Math.sin(z*Math.PI/180);
+
+           ellipseNode = svgDocument.createElementNS(svgNS, "ellipse");
+           ellipseNode.setAttribute("style",style);
+           ellipseNode.setAttribute("cx",   basePointX+offsetX);
+           ellipseNode.setAttribute("cy",   basePointY-offsetY);
+           ellipseNode.setAttribute("rx",   majorAxis);
+           ellipseNode.setAttribute("ry",   minorAxis);
+           gcNode.appendChild(ellipseNode);
+        }
+     } // drawSpiral
+  ]]> </script>
+
+<!-- ============================ -->
+<defs>
+  <filter id="turbFilter4" in="SourceImage" 
+           filterUnits="objectBoundingBox">
+      <feTurbulence baseFrequency="0.05" numOctaves="0" 
+                    result="turbulenceOut1"/> 
+        <feDisplacementMap in="SourceGraphic" in2="turbulenceOut1" 
+                           xChannelSelector="B" yChannelSelector="B"
+                           scale="20"/> 
+   </filter>
+</defs>
+
+<g id="gc" transform="translate(20,20)"
+   filter="url(#turbFilter4)">   
+  <rect x="0" y="0" 
+        width="800" height="500" 
+        fill="none" stroke="none"/>
+</g>
+</svg>
+

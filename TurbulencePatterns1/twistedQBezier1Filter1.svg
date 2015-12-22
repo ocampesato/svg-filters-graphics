@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20001102//EN" 
+ "http://www.w3.org/TR/2000/CR-SVG-20001102/DTD/svg-20001102.dtd"> 
+
+<svg width="100%" height="100%" 
+     xmlns:xlink="http://www.w3.org/1999/xlink" 
+     xmlns="http://www.w3.org/2000/svg">
+
+<defs>
+  <filter id="turbFilter4" in="SourceImage" 
+           filterUnits="objectBoundingBox">
+      <feTurbulence baseFrequency="0.05" numOctaves="2" 
+                    result="turbulenceOut1"/> 
+        <feDisplacementMap in="SourceGraphic" in2="turbulenceOut1" 
+                           xChannelSelector="B" yChannelSelector="B"
+                           scale="10"/> 
+   </filter>
+
+  <path id="qBezierCurve" 
+        d="m0,0 Q100,0 200,200 T300,200 z"
+        fill="red" 
+        stroke-dasharray="2 2 2 2"
+        style="stroke:blue;stroke-width:4;"/>
+
+  <path id="leftArc1" 
+        d="m0,0 Q100,0 200,200 T300,200
+                a60,60 0 0,0 -25,100 z"
+        fill="blue" 
+        opacity=".4" 
+        style="stroke:blue;stroke-width:2;"/>
+
+  <circle id="blackDot"
+          cx="0" cy="0" r="5" fill="black"/>
+</defs>
+
+<g id="gc" transform="translate(20,20) scale(2,2)" 
+   filter="url(#turbFilter4)">  
+    <use xlink:href="#qBezierCurve" x="0" y="0"/>
+    <use xlink:href="#blackDot"     x="300" y="200"/>
+    <use xlink:href="#blackDot"     x="275" y="300"/>
+    <use xlink:href="#leftArc1"     x="0" y="0"/>
+</g>
+</svg>

@@ -1,0 +1,86 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN" 
+  "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+
+<svg width="100%" height="100%" onload="init(evt)"
+     xmlns:xlink="http://www.w3.org/1999/xlink" 
+     xmlns="http://www.w3.org/2000/svg">
+
+  <script type="text/ecmascript"> 
+    <![CDATA[
+     var basePointX    = 50;
+     var basePointY    = 180;
+     var shadowX       = 10;
+     var shadowY       = 10;
+     var radius        = 40;
+     var startAngle    = 0;
+     var endAngle      = 180;
+     var angle         = 0;
+     var style         = "";
+     var strokeColor   = "white";
+     var amplitude     = 255;
+     var scaleFactor   = 2;
+     var frequency     = 4;
+     var deltaY        = 0;
+     var deltaX        = 0;
+     var hGap          = 10;
+     var rVal          = 0;
+     var gVal          = 0;
+     var bVal          = 0;
+ 
+     var circleNode    = null;
+     var nestedNode    = null;
+     var svgDocument   = null;
+     var gcNode        = null;
+     var svgNS         = "http://www.w3.org/2000/svg";
+ 
+     function init(evt) {
+        svgDocument = evt.target.ownerDocument; 
+        gcNode = svgDocument.getElementById("gc")
+
+        drawSpiral();
+     }
+
+     function drawSpiral() {
+        for(angle=startAngle; angle<endAngle; angle++) {
+           deltaX = scaleFactor*angle;
+           deltaY = amplitude*Math.sin(frequency*angle*Math.PI/180)/scaleFactor;
+
+           rVal = Math.abs(deltaY) % 255;
+
+           style  = "fill:rgb("+rVal+","+gVal+","+bVal+")";
+    
+           if( angle % hGap == 0 ) {
+              style += ";stroke:"+strokeColor;
+           }
+
+           circleNode = svgDocument.createElementNS(svgNS, "circle");
+           circleNode.setAttribute("style",style);
+           circleNode.setAttribute("cx",   basePointX+deltaX);
+           circleNode.setAttribute("cy",   basePointY+deltaY);
+           circleNode.setAttribute("r",    radius);
+           gcNode.appendChild(circleNode);
+        }
+     }
+  ]]> </script>
+
+<!-- ============================ -->
+<defs>
+  <filter id="turbFilter4" in="SourceImage" 
+           filterUnits="objectBoundingBox">
+      <feTurbulence baseFrequency="0.05" numOctaves="3" 
+                    result="turbulenceOut1"/> 
+        <feDisplacementMap in="SourceGraphic" in2="turbulenceOut1" 
+                           xChannelSelector="B" yChannelSelector="B"
+                           scale="30"/> 
+   </filter>
+</defs>
+
+<g id="gc" transform="translate(20,20)"
+   filter="url(#turbFilter4)">  
+  <rect x="0" y="0" 
+        width="100%" height="100%" 
+        fill="none" stroke="none"/>
+</g>
+</svg>
+

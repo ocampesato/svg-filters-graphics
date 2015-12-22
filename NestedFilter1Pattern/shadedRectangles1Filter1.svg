@@ -1,0 +1,101 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN" 
+  "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+
+<svg width="100%" height="100%" onload="init(evt)"
+     xmlns:xlink="http://www.w3.org/1999/xlink" 
+     xmlns="http://www.w3.org/2000/svg">
+
+  <script type="text/ecmascript"> 
+    <![CDATA[
+     var basePointX     = 20;
+     var basePointY     = 20;
+     var currentX       = 0.0;
+     var currentY       = 0.0;
+     var shadowX        = 5;
+     var shadowY        = 5;
+     var deltaX         = 0;
+     var deltaY         = 0;
+     var rectCount      = 10;
+     var horizontalSpan = 0;
+     var verticalSpan   = 0;
+     var outerHeight    = 200;
+     var outerWidth     = outerHeight;
+     var innerHeight    = 50;
+     var innerWidth     = innerHeight;
+     var rectHeight     = 0;
+     var rectWidth      = 0;
+     var fillColor      = "red";
+     var style          = "";
+     var strokeColor    = "black";
+ 
+     var rectNode       = null;
+     var svgDocument    = null;
+     var gcNode         = null;
+     var svgNS          = "http://www.w3.org/2000/svg";
+ 
+     function init(evt) {
+        svgDocument = evt.target.ownerDocument; 
+        gcNode = svgDocument.getElementById("gc")
+
+        drawSpiral();
+     }
+
+     function drawSpiral() {
+        style = "fill:"+fillColor;
+        style += ";stroke:"+strokeColor;
+  
+        for(var c=0; c<rectCount; c++) {
+           deltaX = horizontalSpan/rectCount; 
+           deltaY = verticalSpan/rectCount;
+
+           currentX = basePointX+c*deltaX;
+           currentY = basePointY+c*deltaY;
+  
+           rectWidth  = outerWidth-
+                          c*(outerWidth-innerWidth)/rectCount;
+
+           rectHeight = outerHeight-
+                          c*(outerHeight-innerHeight)/rectCount;
+
+           // draw shadow rectangle...
+           rectNode = svgDocument.createElementNS(svgNS, "rect"); 
+           rectNode.setAttribute("style","fill:black");
+           rectNode.setAttribute("x",     currentX+shadowX);
+           rectNode.setAttribute("y",     currentY+shadowY);
+           rectNode.setAttribute("width", rectWidth);
+           rectNode.setAttribute("height",rectHeight);
+           gcNode.appendChild(rectNode);
+
+           // draw rectangle...
+           rectNode = svgDocument.createElementNS(svgNS, "rect"); 
+           rectNode.setAttribute("style",style);
+           rectNode.setAttribute("x",     currentX);
+           rectNode.setAttribute("y",     currentY);
+           rectNode.setAttribute("width", rectWidth);
+           rectNode.setAttribute("height",rectHeight);
+           gcNode.appendChild(rectNode);
+        }
+     } // drawSpiral
+  ]]> </script>
+
+<!-- ============================ -->
+<defs>
+  <filter id="turbFilter4" in="SourceImage" 
+           filterUnits="objectBoundingBox">
+      <feTurbulence baseFrequency="0.05" numOctaves="3" 
+                    result="turbulenceOut1"/> 
+        <feDisplacementMap in="SourceGraphic" in2="turbulenceOut1" 
+                           xChannelSelector="B" yChannelSelector="B"
+                           scale="30"/> 
+   </filter>
+</defs>
+
+<g id="gc" transform="translate(20,20)"
+   filter="url(#turbFilter4)">  
+  <rect x="0" y="0" 
+        width="800" height="500" 
+        fill="none" stroke="none"/>
+</g>
+</svg>
+

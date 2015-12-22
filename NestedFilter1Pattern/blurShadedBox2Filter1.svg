@@ -1,0 +1,149 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN" 
+  "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+
+<svg width="100%" height="100%" onload="init(evt)"
+     xmlns:xlink="http://www.w3.org/1999/xlink" 
+     xmlns="http://www.w3.org/2000/svg">
+
+  <script type="text/ecmascript"> 
+    <![CDATA[
+     var basePointX      = 50;
+     var basePointY      = 50;
+     var rectHeight      = 150;
+     var rectWidth       = 200;
+     var pVertexCount    = 4;
+     var pGonXPts        = Array(pVertexCount);
+     var pGonYPts        = Array(pVertexCount);
+     var style           = "";
+     var fillColors      = ["#FF0000", "#AA0000", "#550000"];
+     var dashStyle       = "1 1 1 1";
+     var strokeWidth     = 3;
+     var strokeColor     = "white";
+ 
+     var pGonNode        = null;
+     var svgDocument     = null;
+     var gcNode          = null;
+     var svgNS           = "http://www.w3.org/2000/svg";
+ 
+     function init(evt) {
+        svgDocument = evt.target.ownerDocument; 
+        gcNode = svgDocument.getElementById("gc")
+
+        drawShadedBox();
+     }
+
+     function drawShadedBox() {
+        drawTopFace();
+        drawFrontFace();
+        drawRightFace();
+     }
+
+     function drawTopFace() {
+        // clockwise from left-most vertex...
+        pGonXPts[0] = basePointX;
+        pGonYPts[0] = basePointY;
+
+        pGonXPts[1] = basePointX+rectWidth;
+        pGonYPts[1] = basePointY;
+
+        pGonXPts[2] = basePointX+rectWidth+rectWidth/4;
+        pGonYPts[2] = basePointY-rectHeight/3;
+
+        pGonXPts[3] = basePointX+rectWidth/4;
+        pGonYPts[3] = basePointY-rectHeight/3;
+
+        points = "";
+        for(var v=0; v<pVertexCount; v++) {
+           points += pGonXPts[v]+","+pGonYPts[v]+" ";
+        }
+
+        style = "fill:"+fillColors[0];
+        style += ";stroke:"+strokeColor;
+        style += ";stroke-dasharray:"+dashStyle;
+        style += ";stroke-width:"+strokeWidth;
+
+        pGonNode = svgDocument.createElementNS(svgNS, "polygon");
+        pGonNode.setAttribute("style", style);
+        pGonNode.setAttribute("points", points);
+        pGonNode.setAttribute("filter","url(#blurFilter1)");  
+        gcNode.appendChild(pGonNode);
+     }
+
+     function drawFrontFace() {
+        style = "fill:"+fillColors[1];
+        style += ";stroke:"+strokeColor;
+        style += ";stroke-dasharray:"+dashStyle;
+        style += ";stroke-width:"+strokeWidth;
+  
+        pGonNode = svgDocument.createElementNS(svgNS, "polygon");
+        pGonNode.setAttribute("style", style);
+        pGonNode.setAttribute("x", basePointX);
+        pGonNode.setAttribute("y", basePointY);
+        pGonNode.setAttribute("width", rectWidth);
+        pGonNode.setAttribute("height",rectHeight);
+        pGonNode.setAttribute("filter","url(#blurFilter1)");  
+        gcNode.appendChild(pGonNode);
+
+     } // drawFrontFace
+
+     function drawRightFace() {
+        // clockwise from top-left vertex...
+        pGonXPts[0] = basePointX+rectWidth;
+        pGonYPts[0] = basePointY;
+
+        pGonXPts[1] = basePointX+rectWidth+rectWidth/4;
+        pGonYPts[1] = basePointY-rectHeight/3;
+
+        pGonXPts[2] = basePointX+rectWidth+rectWidth/4;
+        pGonYPts[2] = basePointY+2*rectHeight/3;
+
+        pGonXPts[3] = basePointX+rectWidth;
+        pGonYPts[3] = basePointY+rectHeight;
+
+        points = "";
+        for(var v=0; v<pVertexCount; v++) {
+           points += pGonXPts[v]+","+pGonYPts[v]+" ";
+        }
+
+        style = "fill:"+fillColors[2];
+        style += ";stroke:"+strokeColor;
+        style += ";stroke-dasharray:"+dashStyle;
+        style += ";stroke-width:"+strokeWidth;
+  
+        pGonNode = svgDocument.createElementNS(svgNS, "polygon");
+        pGonNode.setAttribute("style", style);
+        pGonNode.setAttribute("points", points);
+        pGonNode.setAttribute("filter","url(#blurFilter1)");  
+        gcNode.appendChild(pGonNode);
+     }
+  ]]> </script>
+
+<!-- ============================ -->
+<defs>
+  <filter id="turbFilter4" in="SourceImage" 
+           filterUnits="objectBoundingBox">
+      <feTurbulence baseFrequency="0.35" numOctaves="3" 
+                    result="turbulenceOut1"/> 
+        <feDisplacementMap in="SourceGraphic" in2="turbulenceOut1" 
+                           xChannelSelector="B" yChannelSelector="R"
+                           scale="50"/> 
+   </filter>
+
+  <filter
+     id="blurFilter1"
+     filterUnits="objectBoundingBox"
+     x="0" y="0" 
+     width="100%" height="100%"> 
+     <feGaussianBlur stdDeviation="8"/>
+  </filter>
+</defs>
+
+<g id="gc" transform="translate(20,20)"
+   filter="url(#turbFilter4)">  
+  <rect x="0" y="0" 
+        width="800" height="500" 
+        fill="none" stroke="none"/>
+</g>
+</svg>
+

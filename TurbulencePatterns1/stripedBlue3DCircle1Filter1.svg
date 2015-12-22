@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
+ "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+
+<svg xmlns="http://www.w3.org/2000/svg" 
+     xmlns:xlink="http://www.w3.org/1999/xlink" 
+     width="100%" height="100%"> 
+
+<defs>
+  <filter id="turbFilter4" in="SourceImage" 
+           filterUnits="objectBoundingBox">
+      <feTurbulence baseFrequency="0.05" numOctaves="2" 
+                    result="turbulenceOut1"/> 
+        <feDisplacementMap in="SourceGraphic" in2="turbulenceOut1" 
+                           xChannelSelector="B" yChannelSelector="B"
+                           scale="10"/> 
+   </filter>
+
+  <radialGradient id="blueCircle" 
+                  gradientUnits="objectBoundingBox"
+                  fx="30%" fy="30%">
+    <stop offset="0%"   style="stop-color:#FFFFFF"/>
+    <stop offset="40%"  style="stop-color:#0000AA"/>
+    <stop offset="100%" style="stop-color:#000066"/>
+  </radialGradient>
+   
+  <circle id="3DBlueCircle" cx="0" cy="0" r="100" 
+          style="fill:url(#blueCircle)"/>
+
+  <path id="lStripedArc1"
+        d="m0,-100 a400,400 0 0,0 0,200
+                   a400,400 0 0,1 0,-200"
+        stroke-dasharray="2 2 2 2"
+        stroke="white" stroke-width="2"/>
+
+  <path id="lStripedArc2"
+        d="m0,-100 a200,200 0 0,0 0,200
+                   a200,200 0 0,1 0,-200"
+        stroke-dasharray="2 2 2 2"
+        stroke="white" stroke-width="2"/>
+
+  <path id="lStripedArc3"
+        d="m0,-100 a120,120 0 0,0 0,200
+                   a120,120 0 0,1 0,-200"
+        stroke-dasharray="2 2 2 2"
+        stroke="white" stroke-width="2"/>
+
+  <path id="lStripedArc4"
+        d="m0,-100 a110,110 0 0,0 0,200
+                   a110,110 0 0,1 0,-200"
+        stroke-dasharray="2 2 2 2"
+        stroke="white" stroke-width="2"/>
+
+  <path id="lStripedArc5"
+        d="m0,-100 a105,105 0 0,0 0,200
+                   a105,105 0 0,1 0,-200"
+        stroke-dasharray="2 2 2 2"
+        stroke="white" stroke-width="2"/>
+
+  <path id="lStripedArc6"
+        d="m0,-100 a102,102 0 0,0 0,200
+                   a102,102 0 0,1 0,-200"
+        stroke-dasharray="2 2 2 2"
+        stroke="white" stroke-width="2"/>
+
+  <path id="lStripedArc7"
+        d="m0,-100 a101,101 0 0,0 0,200
+                   a101,101 0 0,1 0,-200"
+        stroke-dasharray="2 2 2 2"
+        stroke="white" stroke-width="2"/>
+
+  <path id="rStripedArc1"
+        d="m0,-100 a400,400 0 0,1 0,200
+                   a400,400 0 0,0 0,-200"
+        stroke-dasharray="2 2 2 2"
+        stroke="white" stroke-width="2"/>
+
+  <path id="rStripedArc2"
+        d="m0,-100 a200,200 0 0,1 0,200
+                   a200,200 0 0,0 0,-200"
+        stroke-dasharray="2 2 2 2"
+        stroke="white" stroke-width="2"/>
+
+  <path id="rStripedArc3"
+        d="m0,-100 a120,120 0 0,1 0,200
+                   a120,120 0 0,0 0,-200"
+        stroke-dasharray="2 2 2 2"
+        stroke="white" stroke-width="2"/>
+
+  <path id="rStripedArc4"
+        d="m0,-100 a110,110 0 0,1 0,200
+                   a110,110 0 0,0 0,-200"
+        stroke-dasharray="2 2 2 2"
+        stroke="white" stroke-width="2"/>
+
+  <path id="rStripedArc5"
+        d="m0,-100 a105,105 0 0,1 0,200
+                   a105,105 0 0,0 0,-200"
+        stroke-dasharray="2 2 2 2"
+        stroke="white" stroke-width="2"/>
+
+  <path id="rStripedArc6"
+        d="m0,-100 a102,102 0 0,1 0,200
+                   a102,102 0 0,0 0,-200"
+        stroke-dasharray="2 2 2 2"
+        stroke="white" stroke-width="2"/>
+
+  <path id="rStripedArc7"
+        d="m0,-100 a101,101 0 0,1 0,200
+                   a101,101 0 0,0 0,-200"
+        stroke-dasharray="2 2 2 2"
+        stroke="white" stroke-width="2"/>
+</defs>
+
+<g id="gc" transform="translate(250,250) scale(2,2)" 
+   filter="url(#turbFilter4)">  
+   <use xlink:href="#3DBlueCircle" x="0" y="0"/>
+
+   <!-- left-side stripes -->
+   <use xlink:href="#lStripedArc1" x="0" y="0"/>
+   <use xlink:href="#lStripedArc2" x="0" y="0"/>
+   <use xlink:href="#lStripedArc3" x="0" y="0"/>
+   <use xlink:href="#lStripedArc4" x="0" y="0"/>
+   <use xlink:href="#lStripedArc5" x="0" y="0"/>
+   <use xlink:href="#lStripedArc6" x="0" y="0"/>
+   <use xlink:href="#lStripedArc7" x="0" y="0"/>
+
+   <!-- right-side stripes -->
+   <use xlink:href="#rStripedArc1" x="0" y="0"/>
+   <use xlink:href="#rStripedArc2" x="0" y="0"/>
+   <use xlink:href="#rStripedArc3" x="0" y="0"/>
+   <use xlink:href="#rStripedArc4" x="0" y="0"/>
+   <use xlink:href="#rStripedArc5" x="0" y="0"/>
+   <use xlink:href="#rStripedArc6" x="0" y="0"/>
+   <use xlink:href="#rStripedArc7" x="0" y="0"/>
+</g>
+</svg>

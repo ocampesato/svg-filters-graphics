@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
+ "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+
+<svg xmlns="http://www.w3.org/2000/svg" 
+     xmlns:xlink="http://www.w3.org/1999/xlink" 
+     width="100%" height="100%"> 
+
+<defs>
+   <filter id="turbFilter1" in="SourceImage" 
+           filterUnits="objectBoundingBox">
+      <feTurbulence baseFrequency="0.05" numOctaves="1" 
+                    result="turbulenceOut1"/> 
+    <feDisplacementMap in="SourceGraphic" in2="turbulenceOut1" 
+                       xChannelSelector="R" yChannelSelector="G"
+                       scale="10"/> 
+   </filter>
+
+   <filter id="turbFilter2" in="SourceImage" 
+           filterUnits="objectBoundingBox">
+      <feTurbulence baseFrequency="0.05" numOctaves="5" 
+                    result="turbulenceOut1"/> 
+        <feDisplacementMap in="SourceGraphic" in2="turbulenceOut1" 
+                           xChannelSelector="A" yChannelSelector="B"
+                           scale="50"/> 
+   </filter>
+
+   <filter id="turbFilter3" in="SourceImage" 
+           filterUnits="objectBoundingBox">
+      <feTurbulence baseFrequency="0.05" numOctaves="5" 
+                    result="turbulenceOut1"/> 
+        <feDisplacementMap in="SourceGraphic" in2="turbulenceOut1" 
+                           xChannelSelector="A" yChannelSelector="B"
+                           scale="500"/> 
+   </filter>
+
+   <filter id="turbFilter4" in="SourceImage" 
+           filterUnits="objectBoundingBox">
+      <feTurbulence baseFrequency="0.05" numOctaves="0" 
+                    result="turbulenceOut1"/> 
+        <feDisplacementMap in="SourceGraphic" in2="turbulenceOut1" 
+                           xChannelSelector="B" yChannelSelector="B"
+                           scale="100"/> 
+   </filter>
+
+   <filter id="turbFilter5" in="SourceImage" 
+           filterUnits="objectBoundingBox">
+      <feTurbulence baseFrequency="0.01" numOctaves="0" 
+                    result="turbulenceOut1"/> 
+        <feDisplacementMap in="SourceGraphic" in2="turbulenceOut1" 
+                           xChannelSelector="B" yChannelSelector="B"
+                           scale="100"/> 
+   </filter>
+
+   <filter id="turbFilter6" in="SourceImage" 
+           filterUnits="objectBoundingBox">
+      <feTurbulence baseFrequency="-1" numOctaves="0" 
+                    result="turbulenceOut1"/> 
+        <feDisplacementMap in="SourceGraphic" in2="turbulenceOut1" 
+                           xChannelSelector="B" yChannelSelector="G"
+                           scale="100"/> 
+   </filter>
+
+     <pattern id="checkerPattern2" 
+              width="20" height="20"
+              patternUnits="userSpaceOnUse">
+        <rect fill="blue"
+              x="0"  y="0"   width="10" height="10"/> 
+        <rect fill="yellow"
+              x="10" y="0"   width="10" height="10"/> 
+        <rect fill="yellow"
+              x="0"  y="10"  width="10" height="10"/> 
+        <rect fill="blue"
+              x="10" y="10"  width="10" height="10"/> 
+        <circle cx="10" cy="10" r="10" 
+                style="fill:white"/>
+     </pattern>
+
+   <rect id="CBRect1" x="0" y="0" width="150" height="150"
+           style="fill:url(#checkerPattern2)"/>
+</defs>
+
+<g transform="translate(-80,-80) scale(.8,.8)">
+<g transform="translate(10,0)" width="100%" height="100%"> 
+   <use xlink:href="#CBRect1" x="120" y="120"
+        filter="url(#turbFilter1)"/>
+</g>
+
+<g transform="translate(250,0)" width="100%" height="100%"> 
+   <use xlink:href="#CBRect1" x="120" y="120"
+        filter="url(#turbFilter2)"/>
+</g>
+
+<g transform="translate(480,0)" width="100%" height="100%"> 
+   <use xlink:href="#CBRect1" x="120" y="120"
+        filter="url(#turbFilter3)"/>
+</g>
+
+<g transform="translate(10,220)" width="100%" height="100%"> 
+   <use xlink:href="#CBRect1" x="120" y="120"
+        filter="url(#turbFilter4)"/>
+</g>
+
+<g transform="translate(250,220)" width="100%" height="100%"> 
+   <use xlink:href="#CBRect1" x="120" y="120"
+        filter="url(#turbFilter5)"/>
+</g>
+
+<g transform="translate(480,220)" width="100%" height="100%"> 
+   <use xlink:href="#CBRect1" x="120" y="120"
+        filter="url(#turbFilter6)"/>
+</g>
+</g>
+</svg>
+

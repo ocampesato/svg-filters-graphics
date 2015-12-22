@@ -1,0 +1,283 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN" 
+  "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+
+<svg width="100%" height="100%" onload="init(evt)"
+     xmlns:xlink="http://www.w3.org/1999/xlink" 
+     xmlns="http://www.w3.org/2000/svg">
+
+  <script type="text/ecmascript"> 
+    <![CDATA[
+     var basePointX       = 180;
+     var basePointY       = 320;
+     var slantAngle       = 40;
+     var zSlantX          = 0;
+     var zSlantY          = 0;
+     var cosAngle         = Math.cos(slantAngle*Math.PI/180);
+     var sinAngle         = Math.sin(slantAngle*Math.PI/180);
+     var strokeWidth      = 4;
+     var style            = "stroke:red;stroke-width:4";
+     var dashStyles       = ['2 2 2 2',
+                             '1 1 1 1',
+                             '4 4 4 4'];
+     var dashCount        = 3;
+     var strokeColors     = ['red','green',
+                             'blue','magenta','pink'];
+     var colorCount       = 5;
+     var axisCount        = 3;
+     var posAxesLengths   = [200,350,250]; //z,x,y
+     var negAxesLengths   = [250,150,140]; //z,x,y
+     var amplitudeX       = 150;
+     var amplitudeY       = 0;
+     var startZ           = 0;
+     var endZ             = 3*posAxesLengths[0]/4;
+     var deltaZ           = 2;
+     var startX           = 0;
+     var widthX           = 250;
+     var deltaX           = 10;
+     var maxCutAwayHeight = posAxesLengths[2]-20;
+     var minCutAwayHeight = maxCutAwayHeight/2; 
+     var theHeight        = maxCutAwayHeight;
+     var deltaHeight      = 0.5;
+     var sineHeight       = 0;
+     var theAngle         = 0;
+     var frequency        = 4.0;
+     var dropHeight       = maxCutAwayHeight/3;
+     var minorY           = 5*maxCutAwayHeight/5;
+     var majorX           = 4*widthX/4;
+     var zCoord           = 0;
+     var xCoord           = 0;
+     var yCoord           = 0;
+     var points           = "";
+     var vertexCount      = 4;
+     var polygonXPts      = Array(vertexCount);
+     var polygonYPts      = Array(vertexCount);
+     var rVal             = 0;
+     var gVal             = 0;
+     var bVal             = 0;
+     var cRadius          = 1;
+     var cStyle           = "fill:red;";
+
+     var circleNode       = null;
+     var arcNode          = null;
+     var lineNode         = null;
+     var svgDocument      = null;
+     var gcNode           = null;
+     var svgNS            = "http://www.w3.org/2000/svg";
+ 
+     function init(evt) {
+        svgDocument = evt.target.ownerDocument; 
+        gcNode = svgDocument.getElementById("gc")
+ 
+        draw3DAxes();
+        draw3DSurface();
+     }
+
+     function draw3DAxes() {
+        // left outward (positive) z-axis 
+        zSlantX = posAxesLengths[0]*Math.sin(
+                           slantAngle*Math.PI/180);
+
+        zSlantY = posAxesLengths[0]*Math.cos(
+                           slantAngle*Math.PI/180);
+
+        style  = "stroke:"+strokeColors[0];
+        style += ";stroke-width:"+strokeWidth;
+
+        lineNode = svgDocument.createElementNS(svgNS, "line");
+        lineNode.setAttribute("style", style);
+        lineNode.setAttribute("x1", basePointX);
+        lineNode.setAttribute("y1", basePointY);
+        lineNode.setAttribute("x2", basePointX-zSlantX);
+        lineNode.setAttribute("y2", basePointY+zSlantY);
+        gcNode.appendChild(lineNode);
+
+        // right receding (negative) z-axis 
+        zSlantX = negAxesLengths[0]*Math.sin(
+                           slantAngle*Math.PI/180);
+
+        zSlantY = negAxesLengths[0]*Math.cos(
+                           slantAngle*Math.PI/180);
+
+        style  = "stroke:"+strokeColors[0];
+        style += ";stroke-width:"+strokeWidth;
+        style += ";stroke-dasharray:"+dashStyles[0];
+
+        lineNode = svgDocument.createElementNS(svgNS, "line");
+        lineNode.setAttribute("style", style);
+        lineNode.setAttribute("x1", basePointX);
+        lineNode.setAttribute("y1", basePointY);
+        lineNode.setAttribute("x2", basePointX+zSlantX);
+        lineNode.setAttribute("y2", basePointY-zSlantY);
+        gcNode.appendChild(lineNode);
+
+        // upper vertical y-axis 
+        style  = "stroke:"+strokeColors[2];
+        style += ";stroke-width:"+strokeWidth;
+
+        lineNode = svgDocument.createElementNS(svgNS, "line");
+        lineNode.setAttribute("style", style);
+        lineNode.setAttribute("x1", basePointX);
+        lineNode.setAttribute("y1", basePointY);
+        lineNode.setAttribute("x2", basePointX);
+        lineNode.setAttribute("y2", basePointY-posAxesLengths[2]);
+        gcNode.appendChild(lineNode);
+
+        // lower vertical y-axis 
+        style  = "stroke:"+strokeColors[2];
+        style += ";stroke-width:"+strokeWidth;
+        style += ";stroke-dasharray:"+dashStyles[1];
+
+        lineNode = svgDocument.createElementNS(svgNS, "line");
+        lineNode.setAttribute("style", style);
+        lineNode.setAttribute("x1", basePointX);
+        lineNode.setAttribute("y1", basePointY);
+        lineNode.setAttribute("x2", basePointX);
+        lineNode.setAttribute("y2", basePointY+negAxesLengths[2]);
+        gcNode.appendChild(lineNode);
+
+        // right horizontal x-axis 
+        style  = "stroke:"+strokeColors[1];
+        style += ";stroke-width:"+strokeWidth;
+
+        lineNode = svgDocument.createElementNS(svgNS, "line");
+        lineNode.setAttribute("style", style);
+        lineNode.setAttribute("x1", basePointX);
+        lineNode.setAttribute("y1", basePointY);
+        lineNode.setAttribute("x2", basePointX+posAxesLengths[1]);
+        lineNode.setAttribute("y2", basePointY)
+        gcNode.appendChild(lineNode);
+
+        // left horizontal x-axis 
+        style  = "stroke:"+strokeColors[1];
+        style += ";stroke-width:"+strokeWidth;
+        style += ";stroke-dasharray:"+dashStyles[2];
+
+        lineNode = svgDocument.createElementNS(svgNS, "line");
+        lineNode.setAttribute("style", style);
+        lineNode.setAttribute("x1", basePointX);
+        lineNode.setAttribute("y1", basePointY);
+        lineNode.setAttribute("x2", basePointX-negAxesLengths[1]);
+        lineNode.setAttribute("y2", basePointY)
+        gcNode.appendChild(lineNode);
+     }
+
+     function draw3DSurface() {
+        for(var z=startZ; z<=endZ; z+=deltaZ) {
+           // calculate coordinates of vertices...
+           zCoord = z;
+           xCoord = 0;
+           yCoord = -maxCutAwayHeight;
+
+           polygonXPts[0] = xCoord-zCoord*sinAngle;
+           polygonYPts[0] = yCoord+zCoord*cosAngle;
+
+           theAngle = z*frequency*Math.PI/180;
+           sineHeight = maxCutAwayHeight*Math.sin(theAngle)/3;
+
+           zCoord = z;
+           xCoord = widthX;
+           yCoord = -maxCutAwayHeight+z*deltaHeight-
+                             dropHeight+sineHeight;
+
+           polygonXPts[1] = xCoord-zCoord*sinAngle;
+           polygonYPts[1] = yCoord+zCoord*cosAngle;
+
+           zCoord = z;
+           xCoord = widthX;
+           yCoord = 0;
+
+           polygonXPts[2] = xCoord-zCoord*sinAngle;
+           polygonYPts[2] = yCoord+zCoord*cosAngle;
+
+           zCoord = z;
+           xCoord = 0;
+           yCoord = 0;
+
+           polygonXPts[3] = xCoord-zCoord*sinAngle;
+           polygonYPts[3] = yCoord+zCoord*cosAngle;
+
+           points  = "M"+(basePointX+polygonXPts[0])+","+
+                         (basePointY+polygonYPts[0])+" ";
+           points += "a"+majorX+","+minorY+" 0 0,0 ";
+           points +=     (polygonXPts[1]-polygonXPts[0])+","+
+                         (polygonYPts[1]-polygonYPts[0])+" ";
+
+           points += "M"+(basePointX+polygonXPts[1])+","+
+                         (basePointY+polygonYPts[1])+" ";
+           points += "Q"+(basePointX+polygonXPts[1]+100)+","+
+                         (basePointY+polygonYPts[1]+50)+" ";
+           points +=     (basePointX+polygonXPts[2])+","+
+                         (basePointY+polygonYPts[2])+" ";
+/*
+           points += "l"+(polygonXPts[2]-polygonXPts[1])+","+
+                         (polygonYPts[2]-polygonYPts[1])+" ";
+*/
+           points += "l"+(polygonXPts[3]-polygonXPts[2])+","+
+                         (polygonYPts[3]-polygonYPts[2])+" z";
+
+           rVal = z*255/(endZ-startZ);
+           gVal = z*255/(endZ-startZ);
+
+           if( z % 2 == 0 ) {
+              style = "fill:url(#radialGradient1)";
+              style += ";stroke:black;stroke-width:2";
+           } else {
+              style = "fill:url(#radialGradient2)";
+              style += ";stroke:black;stroke-width:2";
+           }
+
+           if( Math.abs(z-endZ) < deltaZ ) {
+              style += ";stroke:red;stroke-width:2";
+           }
+
+           arcNode = svgDocument.createElementNS(svgNS, "path");
+           arcNode.setAttribute("style",style);
+           arcNode.setAttribute("filter","url(#blurFilter1)"); 
+           arcNode.setAttribute("d", points);
+           gcNode.appendChild(arcNode);
+
+           circleNode = svgDocument.createElementNS(svgNS, "circle");
+           circleNode.setAttribute("style",cStyle);
+           circleNode.setAttribute("cx", basePointX+polygonXPts[0]);
+           circleNode.setAttribute("cy", basePointY+polygonYPts[0]);
+           circleNode.setAttribute("r",  cRadius);
+           gcNode.appendChild(circleNode);
+
+           circleNode = svgDocument.createElementNS(svgNS, "circle");
+           circleNode.setAttribute("style",cStyle);
+           circleNode.setAttribute("cx", basePointX+polygonXPts[1]);
+           circleNode.setAttribute("cy", basePointY+polygonYPts[1]);
+           circleNode.setAttribute("r",  cRadius);
+           gcNode.appendChild(circleNode);
+        }
+     }
+  ]]> </script>
+
+<!-- ============================ -->
+<defs>
+    <radialGradient id="radialGradient1" 
+                    gradientUnits="userSpaceOnUse"
+                    cx="400" cy="200" r="300" 
+                    fx="400" fy="200">
+      <stop offset="0"    stop-color="white"/>
+      <stop offset=".149" stop-color="red"/>
+      <stop offset=".15"  stop-color="blue"/>
+      <stop offset="1"    stop-color="black"/>
+    </radialGradient>
+
+    <radialGradient id="radialGradient2" 
+                    gradientUnits="userSpaceOnUse"
+                    cx="400" cy="200" r="300" 
+                    fx="400" fy="200">
+      <stop offset="0"    stop-color="yellow"/>
+      <stop offset=".149" stop-color="red"/>
+      <stop offset=".15"  stop-color="white"/>
+      <stop offset="1"    stop-color="black"/>
+    </radialGradient>
+</defs>
+
+<g id="gc" transform="translate(20,0)">
+</g>
+</svg>
+

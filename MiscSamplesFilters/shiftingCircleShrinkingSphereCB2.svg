@@ -1,0 +1,206 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN" 
+  "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+
+<svg width="100%" height="100%" onload="init(evt)"
+     xmlns:xlink="http://www.w3.org/1999/xlink" 
+     xmlns="http://www.w3.org/2000/svg">
+
+  <script type="text/ecmascript"> 
+    <![CDATA[
+    var basePointX    = 100;
+    var basePointY    = 250;
+    var currentX      = 0;
+    var currentY      = 0;
+    var offsetX       = 0;
+    var offsetY       = 0;
+    var radius        = 120;
+    var minorAxis     = 50;
+    var majorAxis     = 100;
+    var minorDelta    = 1;
+    var majorDelta    = 2;
+    var index         = 0;
+    var eGap          = 10;
+    var angle         = 0;
+    var maxAngle      = 360;
+    var angleDelta    = 1;
+    var strokeWidth   = 2;
+    var fillColor     = "";
+    var style         = "";
+    var urlStyles     = ['fill:url(#redCircle)',
+                         'fill:url(#greenCircle)',
+                         'fill:url(#blueCircle)',
+                         'fill:url(#yellowCircle)'];
+    var urlCount      = 4;
+    var rVal          = 0;
+    var gVal          = 0;
+    var bVal          = 0;
+
+    var ellipseNode   = null;
+    var circleNode    = null;
+    var svgDocument   = null;
+    var gcNode        = null;
+    var svgNS         = "http://www.w3.org/2000/svg";
+
+    function init(evt) {
+       svgDocument = evt.target.ownerDocument; 
+       gcNode = svgDocument.getElementById("gc")
+
+       drawSpiral();
+    }
+
+    function drawSpiral() {
+       for(angle=0; angle<maxAngle; angle+=angleDelta) {
+          offsetX = radius*Math.cos(angle*Math.PI/180);
+          offsetY = radius*Math.sin(angle*Math.PI/180);
+
+          currentX = angle+basePointX+offsetX;
+          currentY = basePointY-offsetY;
+  
+          rVal = angle*255/maxAngle;
+          gVal = 0;
+          bVal = 0;
+
+          fillColor = "rgb("+rVal+","+gVal+","+bVal+")";
+          strokeColor = "rgb("+rVal+","+gVal+","+bVal+")";
+
+          style  = "fill:"+strokeColor;
+          if( index == 0 ) {
+             style += ";stroke:white";
+          } else {
+             style += ";stroke:red";
+          }
+
+          index = 1 - index;
+          style += ";stroke-width:"+strokeWidth;
+
+          ellipseNode = svgDocument.createElementNS(svgNS, "ellipse");
+          ellipseNode.setAttribute("style",style);
+          ellipseNode.setAttribute("cx", currentX);
+          ellipseNode.setAttribute("cy", currentY);
+          ellipseNode.setAttribute("rx", majorAxis);
+          ellipseNode.setAttribute("ry", minorAxis);
+          gcNode.appendChild(ellipseNode);
+
+          addCBSphere();
+
+          if( angle % eGap == 0 ) {
+             minorAxis -= minorDelta;
+             majorAxis -= majorDelta;
+
+             if( minorAxis < 0 ) { minorAxis = 0; }
+             if( majorAxis < 0 ) { majorAxis = 0; }
+          }
+       }
+    } // drawSpiral
+
+    function addCBSphere() {
+       // add sphere...
+       circleNode = svgDocument.createElementNS(svgNS, "circle");
+       circleNode.setAttribute("style", 
+                   urlStyles[angle%urlCount]);
+                 //urlStyles[(angle/angleDelta)%urlCount]);
+       circleNode.setAttribute("cx",    currentX);
+       circleNode.setAttribute("cy",    currentY);
+       circleNode.setAttribute("r",     majorAxis);
+       gcNode.appendChild(circleNode);
+
+       // add checker pattern...
+       style = "fill:url(#checkerPattern);opacity:.4";
+
+       circleNode = svgDocument.createElementNS(svgNS, "circle");
+       circleNode.setAttribute("style", style);
+       circleNode.setAttribute("cx",    currentX);
+       circleNode.setAttribute("cy",    currentY);
+       circleNode.setAttribute("r",     majorAxis);
+       gcNode.appendChild(circleNode);
+    }
+  ]]> </script>
+
+<!-- ============================ -->
+<defs>
+  <radialGradient id="redCircle" 
+                  gradientUnits="objectBoundingBox"
+                  fx="20%" fy="20%">
+     
+    <stop offset="0%"   style="stop-color:#FFFFFF"/>
+    <stop offset="40%"  style="stop-color:#AA0000"/>
+    <stop offset="100%" style="stop-color:#660000"/>
+  </radialGradient>
+   
+  <circle id="3DRedCircle" cx="0" cy="0" r="40" 
+          style="fill:url(#redCircle)"/>
+
+
+  <radialGradient id="greenCircle" 
+                  gradientUnits="objectBoundingBox"
+                  fx="20%" fy="20%">
+     
+    <stop offset="0%"   style="stop-color:#FFFFFF"/>
+    <stop offset="40%"  style="stop-color:#00AA00"/>
+    <stop offset="100%" style="stop-color:#006600"/>
+  </radialGradient>
+   
+  <circle id="3DGreenCircle" cx="0" cy="0" r="40" 
+          style="fill:url(#greenCircle)"/>
+
+  <radialGradient id="blueCircle" 
+                  gradientUnits="objectBoundingBox"
+                  fx="20%" fy="20%">
+     
+    <stop offset="0%"   style="stop-color:#FFFFFF"/>
+    <stop offset="40%"  style="stop-color:#0000AA"/>
+    <stop offset="100%" style="stop-color:#000066"/>
+  </radialGradient>
+   
+  <circle id="3DBlueCircle" cx="0" cy="0" r="40" 
+          style="fill:url(#blueCircle)"/>
+
+  <radialGradient id="yellowCircle" 
+                  gradientUnits="objectBoundingBox"
+                  fx="20%" fy="20%">
+     
+    <stop offset="0%"   style="stop-color:#FFFFFF"/>
+    <stop offset="40%"  style="stop-color:#AAAA00"/>
+    <stop offset="100%" style="stop-color:#666600"/>
+  </radialGradient>
+   
+  <circle id="3DYellowCircle" cx="0" cy="0" r="40" 
+          style="fill:url(#yellowCircle)"/>
+
+  <pattern id="checkerPattern" 
+           width="20" height="20"
+           patternUnits="userSpaceOnUse">
+
+     <rect fill="red"
+           x="0"  y="0"  width="10" height="10"/> 
+
+     <rect fill="yellow"
+           x="10" y="0"  width="10" height="10"/> 
+
+     <rect fill="yellow"
+           x="0"  y="10" width="10" height="10"/> 
+
+     <rect fill="red"
+           x="10" y="10" width="10" height="10"/> 
+  </pattern>
+
+  <circle id="checkerCircle" cx="0" cy="0" r="40" 
+          style="fill:url(#checkerPattern)"/>
+
+  <filter
+     id="blurFilter1"
+     filterUnits="objectBoundingBox"
+     x="0" y="0" 
+     width="100%" height="100%"> 
+     <feGaussianBlur stdDeviation="4"/>
+  </filter>
+</defs>
+
+<g id="gc" transform="translate(10,10)"> 
+  <rect x="0" y="0" 
+        width="800" height="500" 
+        fill="none" stroke="none"/>
+</g>
+</svg>
+

@@ -1,0 +1,228 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN" 
+  "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+
+<svg width="100%" height="100%" onload="init(evt)"
+     xmlns="http://www.w3.org/2000/svg">
+
+  <script type="text/ecmascript"> 
+   <![CDATA[
+    var basePointX    = 350;
+    var basePointY    = 250;
+    var currentX      = 0;
+    var currentY      = 0;
+    var offsetX       = 0;
+    var offsetY       = 0;
+    var radius        = 0;
+    var minorAxis     = 20;
+    var majorAxis     = 40;
+    var spiralCount   = 4;
+    var Constant      = 240;
+    var angle         = 0;
+    var factor        = 0.5;
+    var maxAngle      = 720;
+    var angleDelta    = 3;
+    var rGap          = 8;
+    var rWidth        = 2*majorAxis;
+    var rHeight       = 2*minorAxis;
+    var widthDelta    = 4;
+    var heightDelta   = 2;
+    var shortPause    = 10;
+    var strokeWidth   = 1;
+    var xVertex       = 0;
+    var yVertex       = 0;
+    var slantX        = 20;
+    var slantY        = 10;
+    var style         = "";
+    var rVal          = 0;
+    var gVal          = 0;
+    var bVal          = 0;
+ 
+    var rectNode      = null;
+    var cBezierNode   = null;
+    var polygonNode   = null;
+    var ellipseNode   = null;
+    var svgDocument   = null;
+    var gcNode        = null;
+    var svgNS         = "http://www.w3.org/2000/svg";
+
+    function init(evt) {
+       svgDocument = evt.target.ownerDocument; 
+       gcNode = svgDocument.getElementById("gc")
+
+       drawSpiral();
+    }
+
+    function drawSpiral() {
+       for(angle=0; angle<maxAngle; angle+=angleDelta) {
+          radius = Constant*Math.cos(
+                             factor*angle*Math.PI/180);
+  
+          offsetX = radius*Math.cos(angle*Math.PI/180);
+          offsetY = radius*Math.sin(angle*Math.PI/180);
+
+          currentX = basePointX+offsetX;
+          currentY = basePointY-offsetY;
+  
+          rVal = angle*255/maxAngle;
+          gVal = 0;
+          bVal = 0;
+ 
+          strokeColor = 
+                  "rgb("+rVal+","+gVal+","+bVal+")";
+
+          style  = "fill:"+strokeColor;
+          style += ";stroke:yellow";
+          style += ";stroke-width:"+strokeWidth;
+
+          ellipseNode = document.createElementNS(svgNS, "ellipse");
+          ellipseNode.setAttribute("style",style);
+          ellipseNode.setAttribute("cx", currentX);
+          ellipseNode.setAttribute("cy", currentY);
+          ellipseNode.setAttribute("rx", majorAxis);
+          ellipseNode.setAttribute("ry", minorAxis);
+          gcNode.appendChild(ellipseNode);
+
+          drawCBezierArc();
+
+          if( angle % rGap == 0 ) {
+             addRectangleNode();
+             rWidth  += widthDelta;
+             rHeight += heightDelta;
+          }
+       }
+    } // drawSpiral
+
+    function drawCBezierArc() {
+       // outer bezier arc...
+       points  = "m"+(currentX+majorAxis/2)+","+(currentY)+" ";
+
+       points += "a"+(majorAxis/2)+","+
+                     (majorAxis/2)+" ";
+       points +=     "0 0,0 "+(majorAxis)+",0 ";
+
+       points += "a"+(majorAxis/2)+","+
+                     (majorAxis/2)+" ";
+       points +=     "0 0,0 "+(majorAxis)+",0 ";
+
+       points += "C"+(currentX+majorAxis/2)+","+
+                     (currentY-5*majorAxis/2)+" ";
+       points +=     (currentX+3*majorAxis/2)+","+
+                     (currentY)+" ";
+       points +=     (currentX)+","+
+                     (currentY+2*majorAxis)+" ";
+
+     //cBezierNode = svgDocument.createElement("path");
+       cBezierNode = svgDocument.createElementNS(svgNS, "path");
+       cBezierNode.setAttribute("d", points);
+       cBezierNode.setAttribute("style", style);
+       gcNode.appendChild(cBezierNode);
+
+       // inner bezier arc...
+       points  = "m"+(currentX)+","+(currentY)+" ";
+       points += "C"+(currentX+majorAxis)+","+
+                     (currentY-3*majorAxis/2)+" ";
+       points +=     (currentX+majorAxis/2)+","+
+                     (currentY)+" ";
+       points +=     (currentX)+","+
+                     (currentY+2*majorAxis)+" ";
+
+     //cBezierNode = svgDocument.createElement("path");
+       cBezierNode = svgDocument.createElementNS(svgNS, "path");
+       cBezierNode.setAttribute("d", points);
+       cBezierNode.setAttribute("style", "fill:white");
+       gcNode.appendChild(cBezierNode);
+    }
+
+    function addRectangleNode(event) {
+     //style  = "fill:yellow;stroke:red;";
+       style  = "fill:url(#gradientDefinition2);";
+       style += "stroke-width:"+strokeWidth;
+
+       rectNode = svgDocument.createElementNS(svgNS, "rect");
+       rectNode.setAttribute("style",style);
+       rectNode.setAttribute("x",      currentX-rWidth/2);
+       rectNode.setAttribute("y",      currentY-rHeight/2); 
+       rectNode.setAttribute("width",  rWidth);
+       rectNode.setAttribute("height", rHeight);
+       gcNode.appendChild(rectNode);
+
+       // top horizontal strip... 
+       xVertex = currentX-rWidth/2;
+       yVertex = currentY-rHeight/2;
+       points  = xVertex+" "+yVertex+" ";
+
+       xVertex = currentX-rWidth/2+rWidth;
+       yVertex = currentY-rHeight/2;
+       points  += xVertex+" "+yVertex+" ";
+
+       xVertex  = currentX-rWidth/2+rWidth+slantX;
+       yVertex  = currentY-rHeight/2-slantY;
+       points  += xVertex+" "+yVertex+" ";
+
+       xVertex  = currentX-rWidth/2+slantX;
+       yVertex  = currentY-rHeight/2-slantY;
+       points  += xVertex+" "+yVertex;
+
+       style  = "fill:black;stroke:red;";
+       style += "stroke-width:"+strokeWidth;
+
+       polygonNode = svgDocument.createElement("polygon");
+       polygonNode.setAttribute("style",style);
+       polygonNode.setAttribute("points",points);
+       gcNode.appendChild(polygonNode);
+
+       // right vertical strip... 
+       xVertex = currentX-rWidth/2+rWidth;
+       yVertex = currentY-rHeight/2;
+       points  = xVertex+" "+yVertex+" ";
+
+       xVertex  = currentX-rWidth/2+rWidth+slantX;
+       yVertex  = currentY-rHeight/2-slantY;
+       points  += xVertex+" "+yVertex+" ";
+
+       xVertex  = currentX-rWidth/2+rWidth+slantX;
+       yVertex  = currentY-rHeight/2-slantY+rHeight;
+       points  += xVertex+" "+yVertex+" ";
+
+       xVertex  = currentX-rWidth/2+rWidth;
+       yVertex  = currentY-rHeight/2+rHeight;
+       points  += xVertex+" "+yVertex+" ";
+
+       style  = "fill:black;stroke:red;";
+       style += "stroke-width:"+strokeWidth;
+
+       polygonNode = svgDocument.createElement("polygon");
+       polygonNode.setAttribute("style",style);
+       polygonNode.setAttribute("points",points);
+       gcNode.appendChild(polygonNode);
+    }
+  ]]> </script>
+
+<!-- ============================ -->
+<defs>
+  <filter id="turbFilter4" in="SourceImage" 
+           filterUnits="objectBoundingBox">
+      <feTurbulence baseFrequency="0.15" numOctaves="2" 
+                    result="turbulenceOut1"/> 
+        <feDisplacementMap in="SourceGraphic" in2="turbulenceOut1" 
+                           xChannelSelector="B" yChannelSelector="B"
+                           scale="40"/> 
+   </filter>
+
+   <radialGradient id="gradientDefinition2">
+      <stop offset="0%"   stop-color="#C0C040"/>
+      <stop offset="30%"  stop-color="#303000"/>
+      <stop offset="60%"  stop-color="#FF0F0F"/>
+      <stop offset="90%"  stop-color="#101000"/>
+   </radialGradient> 
+</defs>
+
+<g id="gc" transform="translate(10,10)" 
+   filter="url(#turbFilter4)">  
+  <rect x="0" y="0" 
+        width="800" height="500" 
+        fill="none" stroke="none"/>
+</g>
+</svg>
+

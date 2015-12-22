@@ -1,0 +1,192 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN" 
+  "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+
+<svg width="100%" height="100%" onload="init(evt)"
+     xmlns:xlink="http://www.w3.org/1999/xlink" 
+     xmlns="http://www.w3.org/2000/svg">
+
+  <script type="text/ecmascript"> 
+    <![CDATA[
+    var basePointX      = 0;
+    var basePointY      = 100;
+
+    var strokeColor     = "";
+    var strokeColors    = ['red','green','blue','yellow'];
+    var colorCount      = 4;
+    var strokeWidth     = 1;
+    var bezierStyle     = "";
+    var points          = "";
+    var cBezier         = 4;
+    var bezierXPts      = Array(cBezier);
+    var bezierYPts      = Array(cBezier);
+    var bezierWidth     = 0;
+    var deltaT          = 0;
+    var pointCount      = 0;
+    var bezierCount     = 0;
+    var bezierGap       = 5;
+    var paramXPts       = Array(1);
+    var paramYPts       = Array(1);
+    var rVal            = 0;
+    var gVal            = 0;
+    var bVal            = 0;
+    var majorAxis       = 50;
+    var minorAxis       = 25;
+
+    var bezierNode      = null;
+    var arcNode         = null;
+    var lineNode        = null;
+    var gcNode          = null;
+    var svgDocument     = null;
+    var svgNS           = "http://www.w3.org/2000/svg";
+
+    function init(evt) {
+       svgDocument = evt.target.ownerDocument; 
+       gcNode = svgDocument.getElementById("gc")
+
+       initializeBezier();
+       parameterizeBezier();
+       renderBezier();
+    }
+
+    function initializeBezier() {
+       bezierXPts[0] = -300;
+       bezierYPts[0] = 800;
+
+       bezierXPts[1] = 200;
+       bezierYPts[1] = -200;
+
+       bezierXPts[2] = 400;
+       bezierYPts[2] = -400;
+
+       bezierXPts[3] = 750;
+       bezierYPts[3] = 250;
+
+       points  = "M"+bezierXPts[0]+","+bezierYPts[0]+" "+
+                 "C"+bezierXPts[1]+","+bezierYPts[1]+" "+
+                     bezierXPts[2]+","+bezierYPts[2]+" "+
+                     bezierXPts[3]+","+bezierYPts[3];
+
+       bezierStyle = "stroke-width:8; stroke:red;fill:none";
+
+       bezierNode = svgDocument.createElementNS(svgNS, "path");
+       bezierNode.setAttribute("style", bezierStyle);
+       bezierNode.setAttribute("d", points);
+     //gcNode.appendChild(bezierNode);
+    }
+
+    function parameterizeBezier() {
+       bezierWidth = bezierXPts[3]-bezierXPts[0];
+       deltaT      = 1.0/bezierWidth;
+
+       for(var t=0; t<1; t+=deltaT) {
+          paramXPts[pointCount] = bezierXPts[0]*t*t*t+
+                                  bezierXPts[1]*t*t*(1-t)*3+
+                                  bezierXPts[2]*t*(1-t)*(1-t)*3+
+                                  bezierXPts[3]*(1-t)*(1-t)*(1-t);
+
+          paramYPts[pointCount] = bezierYPts[0]*t*t*t+
+                                  bezierYPts[1]*t*t*(1-t)*3+
+                                  bezierYPts[2]*t*(1-t)*(1-t)*3+
+                                  bezierYPts[3]*(1-t)*(1-t)*(1-t);
+
+          ++pointCount;
+       }
+    }
+
+    function renderBezier() {
+       bezierCount = Math.floor(bezierWidth/bezierGap);
+
+       for(var v1=0; v1<bezierCount-1; v1+=bezierGap) {
+          p1 = (v1/bezierGap)%pointCount;
+          p2 = (2*v1/bezierGap)%pointCount;
+          p3 = (7*v1/bezierGap)%pointCount;
+          p4 = (11*v1/bezierGap)%pointCount;
+
+          r1 = (v1/bezierGap)%cBezier;
+          r2 = (2*v1/bezierGap)%cBezier;
+          r3 = (3*v1/bezierGap)%cBezier;
+          r4 = (4*v1/bezierGap)%cBezier;
+
+          points = "M"+paramXPts[p3]+","+paramYPts[p3]+" "+
+                   "C"+(paramXPts[p2])+","+paramYPts[p2]+" "+
+                       (paramYPts[p1])+","+paramYPts[p1]+" "+
+                       (paramXPts[p4])+","+(paramYPts[p4])+" "+
+                   "T"+paramXPts[p4]+","+paramYPts[p4]+" "+
+                        paramXPts[r1]+","+paramYPts[r2]+" ";
+
+          rVal = 0; gVal = 0; bVal = 0;
+
+          if( v1 % 4 == 0 ) {
+             rVal = v1*255/bezierCount;
+          } else if( v1 % 4 == 1 ) {
+             gVal = v1*255/bezierCount;
+          } else if( v1 % 4 == 2 ) {
+             bVal = v1*255/bezierCount;
+          } else {
+             rVal = v1*255/bezierCount;
+             gVal = v1*255/bezierCount;
+          }
+
+          fillColor = "rgb("+rVal+","+gVal+","+bVal+")";
+        //fillColor = "none";
+
+        //strokeColor = strokeColors[0];
+          strokeColor = "rgb("+rVal+","+gVal+","+bVal+")";
+
+          bezierStyle = "stroke-width:"+strokeWidth+
+                        ";stroke:"+strokeColor+
+                        ";fill:"+fillColor;
+
+          if( (v1/bezierGap) % 4 == 0 ) {
+             bezierStyle += ";filter:url(#turbFilter6)";
+          }
+
+          bezierNode = svgDocument.createElementNS(svgNS, "path");
+          bezierNode.setAttribute("style", bezierStyle);
+          bezierNode.setAttribute("d", points);
+          gcNode.appendChild(bezierNode);
+
+          addEllipticArcs(paramXPts[p4],paramYPts[p4]);
+       }
+    }
+    
+    function addEllipticArcs(centerX,centerY) {
+       points = "M"+(centerX)+","+(centerY)+" "+
+                    "a"+(majorAxis)+","+(minorAxis)+" 0 0,0 "+
+                    (majorAxis)+","+(-minorAxis)+" "+
+                    "a"+(majorAxis)+","+(minorAxis)+" 0 0,0 "+
+                    (majorAxis)+","+(minorAxis)+" "+
+                    "a"+(majorAxis)+","+(8*minorAxis)+" 0 0,0 "+
+                    (-majorAxis)+","+(8*minorAxis)+" "+
+                    "a"+(majorAxis)+","+(8*minorAxis)+" 0 0,0 "+
+                    (-majorAxis)+","+(-8*minorAxis)+" ";
+
+       arcNode = document.createElementNS(svgNS, "path");
+       arcNode.setAttribute("style", bezierStyle);
+       arcNode.setAttribute("d", points);
+       gcNode.appendChild(arcNode);
+    }
+  ]]> </script>
+
+<!-- ============================ -->
+<defs>
+  <filter id="turbFilter6" in="SourceImage" 
+          filterUnits="objectBoundingBox">
+     <feTurbulence baseFrequency="0.2" numOctaves="1" 
+                   result="turbulenceOut1"/> 
+     <feDisplacementMap in="SourceGraphic" in2="turbulenceOut1" 
+                        xChannelSelector="B" yChannelSelector="G"
+                        scale="20"/> 
+  </filter>
+</defs>
+
+<g id="gc" transform="translate(0,200)"
+   filter="url(#turbFilter6)">
+  <!-- render outer rectangle -->
+  <rect x="0" y="0" 
+        width="800" height="500" 
+        fill="none" stroke="none"/>
+</g>
+</svg>
+

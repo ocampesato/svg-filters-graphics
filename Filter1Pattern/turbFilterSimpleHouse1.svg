@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
+ "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+
+<svg xmlns="http://www.w3.org/2000/svg" 
+     xmlns:xlink="http://www.w3.org/1999/xlink" 
+     width="100%" height="100%"> 
+
+<defs>
+  <filter
+     id="feImageFilter1"
+     filterUnits="objectBoundingBox"
+     x="0" y="0" width="200" height="200"> 
+     <feImage xlink:href="simpleHouse1.gif" 
+       width="200" height="200"
+       result="outputImage1"/>
+  </filter>
+
+  <filter id="turbFilter4" 
+          filterUnits="objectBoundingBox">
+     <feImage xlink:href="simpleHouse1.gif" 
+       width="200" height="200"
+       result="outputImage1"/>
+
+     <feTurbulence in="outputImage1"
+                   baseFrequency="0.45" numOctaves="3" 
+                   result="turbulenceOut1"/> 
+     <feDisplacementMap in="outputImage1" in2="turbulenceOut1" 
+                        xChannelSelector="R" yChannelSelector="R"
+                        scale="20"/> 
+  </filter>
+
+  <filter id="turbFilter4b" 
+          filterUnits="objectBoundingBox">
+     <feImage xlink:href="simpleHouse1.gif" 
+       width="200" height="200"
+       result="outputImage1"/>
+
+     <feTurbulence in="outputImage1"
+                   baseFrequency="0.45" numOctaves="4" 
+                   result="turbulenceOut1"/> 
+     <feDisplacementMap in="outputImage1" in2="turbulenceOut1" 
+                        xChannelSelector="R" yChannelSelector="R"
+                        scale="50"/> 
+  </filter>
+
+  <filter id="turbFilter4c" 
+          filterUnits="objectBoundingBox">
+     <feImage xlink:href="simpleHouse1.gif" 
+       width="200" height="200"
+       result="outputImage1"/>
+
+     <feTurbulence in="outputImage1"
+                   baseFrequency="0.05" numOctaves="5" 
+                   result="turbulenceOut1"/> 
+     <feDisplacementMap in="outputImage1" in2="turbulenceOut1" 
+                        xChannelSelector="R" yChannelSelector="R"
+                        scale="50"/> 
+  </filter>
+
+  <filter id="turbFilter4d" 
+          filterUnits="objectBoundingBox">
+     <feImage xlink:href="simpleHouse1.gif" 
+       width="200" height="200"
+       result="outputImage1"/>
+
+     <feTurbulence in="outputImage1"
+                   baseFrequency="0.01" numOctaves="10" 
+                   result="turbulenceOut1"/> 
+     <feDisplacementMap in="outputImage1" in2="turbulenceOut1" 
+                        xChannelSelector="R" yChannelSelector="R"
+                        scale="30"/> 
+  </filter>
+
+  <filter id="turbFilter4e" 
+          filterUnits="objectBoundingBox">
+     <feImage xlink:href="simpleHouse1.gif" 
+       width="200" height="200"
+       result="outputImage1"/>
+
+     <feTurbulence in="outputImage1"
+                   baseFrequency="0.01" numOctaves="0" 
+                   result="turbulenceOut1"/> 
+     <feDisplacementMap in="outputImage1" in2="turbulenceOut1" 
+                        xChannelSelector="R" yChannelSelector="R"
+                        scale="30"/> 
+  </filter>
+</defs>
+
+       baseFrequency="0.05" numOctaves="0"  scale="20"
+       baseFrequency="0.05" numOctaves="0"  scale="20"
+       baseFrequency="0.05" numOctaves="5"  scale="50"
+       baseFrequency="0.01" numOctaves="10" scale="30"
+       baseFrequency="0.01" numOctaves="0"  scale="30"
+
+<g transform="translate(40,20)"> 
+  <rect x="0" y="0" width="200" height="200"
+        filter="url(#feImageFilter1)"/>
+
+  <rect x="200" y="0" width="200" height="200"
+        filter="url(#turbFilter4)"/>
+
+  <rect x="400" y="0" width="200" height="200"
+        filter="url(#turbFilter4b)"/>
+
+  <rect x="0" y="220" width="200" height="200"
+        filter="url(#turbFilter4c)"/>
+
+  <rect x="200" y="220" width="200" height="200"
+        filter="url(#turbFilter4d)"/>
+
+  <rect x="400" y="220" width="200" height="200"
+        filter="url(#turbFilter4e)"/>
+</g>
+</svg>

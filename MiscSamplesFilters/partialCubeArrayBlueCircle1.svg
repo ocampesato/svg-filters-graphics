@@ -1,0 +1,173 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN" 
+  "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+
+<svg width="100%" height="100%" onload="init(evt)"
+     xmlns:xlink="http://www.w3.org/1999/xlink" 
+     xmlns="http://www.w3.org/2000/svg">
+
+  <script type="text/ecmascript"> 
+    <![CDATA[
+    var basePointX       = 200;
+    var basePointY       = 20;
+    var currentX         = 0;
+    var currentY         = 0;
+    var leftSlantLength  = 20;
+    var rightSlantLength = 20;
+    var leftSlantAngle   = 25;
+    var rightSlantAngle  = 20;
+    var leftSlantX       = 0;
+    var leftSlantY       = 0;
+    var rightSlantX      = 0;
+    var rightSlantY      = 0;
+
+    var cWidth           = 35;
+    var cHeight          = 35;
+    var cDepth           = 35;
+    var rowCount         = 4;
+    var columnCount      = 4;
+    var shadeColors      = [['#FF0000','#BB0000','#660000'],
+                            ['#00FF00','#00BB00','#006600'],
+                            ['#0000FF','#0000BB','#000066'],
+                            ['#FFFF00','#BBBB00','#666600']];
+    var colorCount       = 4;
+
+    var index            = 0;
+    var vertexCount      = 3;
+    var verticesX        = Array(vertexCount);
+    var verticesY        = Array(vertexCount);
+    var strokeWidth      = 4;
+    var cellStyle        = "";
+    var points           = "";
+    var row              = 0;
+    var col              = 0;
+ 
+    var polygonNode      = null;
+    var svgDocument      = null;
+    var gcNode           = null;
+    var svgNS            = "http://www.w3.org/2000/svg";
+
+    function init(evt) {
+       svgDocument = evt.target.ownerDocument; 
+       gcNode = svgDocument.getElementById("gc")
+
+       drawCells();
+    }
+
+    function drawCells() {
+       for(row=0; row<rowCount; row++) {
+          for(col=0; col<columnCount; col++) {
+             fillColor = shadeColors[(row+col)%colorCount][0];
+             cellStyle  = "fill:"+fillColor;
+
+             computePoints(row, col);
+
+             polygonNode = svgDocument.createElementNS(svgNS, "polygon");
+             polygonNode.setAttribute("style", cellStyle);
+             polygonNode.setAttribute("points",points);
+             gcNode.appendChild(polygonNode);
+             drawShadows(row,col);
+          }
+       }
+
+       function computePoints(row, col) {
+          slantX1 = cWidth*Math.cos(leftSlantAngle*Math.PI/180);
+          slantY1 = cWidth*Math.sin(leftSlantAngle*Math.PI/180);
+
+          vertexX = basePointX+(col-row)*slantX1;
+          vertexY = basePointY+(row+col)*slantY1+(row+col)*cDepth;
+          points  = vertexX+", "+vertexY+" ";
+
+          vertexX = basePointX+(col+1-row)*slantX1;
+          vertexY = basePointY+(row+1+col)*slantY1+(row+col)*cDepth;
+          points  += vertexX+", "+vertexY+" ";
+
+          verticesX[0] = vertexX; 
+          verticesY[0] = vertexY; 
+
+          vertexX = basePointX+(col-row)*slantX1;
+          vertexY = basePointY+(row+2+col)*slantY1+(row+col)*cDepth;
+          points  += vertexX+", "+vertexY+" ";
+
+          verticesX[1] = vertexX; 
+          verticesY[1] = vertexY; 
+
+          vertexX = basePointX+(col-1-row)*slantX1;
+          vertexY = basePointY+(row+1+col)*slantY1+(row+col)*cDepth;
+          points  += vertexX+", "+vertexY+" ";
+
+          verticesX[2] = vertexX; 
+          verticesY[2] = vertexY; 
+       }
+
+       function drawShadows(row,col) {
+          // right vertical shadow...
+          vertexX = verticesX[0];
+          vertexY = verticesY[0];
+          points  = vertexX+", "+vertexY+" ";
+
+          vertexX = verticesX[0];
+          vertexY = verticesY[0]+cDepth;
+          points += vertexX+", "+vertexY+" ";
+
+          vertexX = verticesX[1];
+          vertexY = verticesY[1]+cDepth;
+          points += vertexX+", "+vertexY+" ";
+
+          vertexX = verticesX[1];
+          vertexY = verticesY[1];
+          points += vertexX+", "+vertexY+" ";
+           
+          cellStyle = "fill:url(#blueCircle)";
+
+          polygonNode = svgDocument.createElementNS(svgNS, "polygon");
+          polygonNode.setAttribute("style", cellStyle);
+          polygonNode.setAttribute("points",points);
+          gcNode.appendChild(polygonNode);
+
+          // left vertical shadow...
+          vertexX = verticesX[1];
+          vertexY = verticesY[1];
+          points  = vertexX+", "+vertexY+" ";
+
+          vertexX = verticesX[1];
+          vertexY = verticesY[1]+cDepth;
+          points += vertexX+", "+vertexY+" ";
+
+          vertexX = verticesX[2];
+          vertexY = verticesY[2]+cDepth;
+          points += vertexX+", "+vertexY+" ";
+
+          vertexX = verticesX[2];
+          vertexY = verticesY[2];
+          points += vertexX+", "+vertexY+" ";
+           
+          cellStyle = "fill:"+shadeColors[(row+col)%colorCount][1];
+          cellStyle += ";filter:url(#blurFilter1)";
+
+          polygonNode = svgDocument.createElementNS(svgNS, "polygon");
+          polygonNode.setAttribute("style", cellStyle);
+          polygonNode.setAttribute("points",points);
+          gcNode.appendChild(polygonNode);
+       }
+    } // drawCells
+  ]]> </script>
+
+<!-- ============================ -->
+<defs>
+     <radialGradient id="blueCircle" 
+                     gradientUnits="objectBoundingBox"
+                     fx="30%" fy="30%">
+       <stop offset="0%"   style="stop-color:#FFFFFF"/>
+       <stop offset="40%"  style="stop-color:#0000AA"/>
+       <stop offset="100%" style="stop-color:#000066"/>
+     </radialGradient>
+</defs>
+
+<g id="gc" transform="translate(10,10)"> 
+  <rect x="0" y="0" 
+        width="100%" height="100%" 
+        fill="none" stroke="none"/>
+</g>
+</svg>
+

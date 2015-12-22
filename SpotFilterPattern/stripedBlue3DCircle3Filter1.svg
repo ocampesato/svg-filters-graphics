@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
+ "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+
+<svg xmlns="http://www.w3.org/2000/svg" 
+     xmlns:xlink="http://www.w3.org/1999/xlink" 
+     width="100%" height="100%"> 
+
+<defs>
+  <filter id="turbFilter4" in="SourceImage" 
+           filterUnits="objectBoundingBox">
+      <feTurbulence baseFrequency="0.05" numOctaves="1" 
+                    result="turbulenceOut1"/> 
+        <feDisplacementMap in="SourceGraphic" in2="turbulenceOut1" 
+                           xChannelSelector="B" yChannelSelector="B"
+                           scale="10"/> 
+
+      <feDiffuseLighting in="SourceGraphic" 
+                         diffuseConstant="2" 
+                         surfaceScale="20" 
+                         style="lighting-color:#00FF00;">
+         <feSpotLight x="180" y="190" z="180" 
+                      pointsAtX="30" pointsAtY="30" pointsAtZ="0" 
+                      specularExponent="2"/>
+     </feDiffuseLighting>
+   </filter>
+
+  <radialGradient id="blueCircle" 
+                  gradientUnits="objectBoundingBox"
+                  fx="30%" fy="30%">
+    <stop offset="0%"   style="stop-color:#FFFFFF"/>
+    <stop offset="40%"  style="stop-color:#0000AA"/>
+    <stop offset="100%" style="stop-color:#000066"/>
+  </radialGradient>
+   
+  <radialGradient id="redCircle" 
+                  gradientUnits="objectBoundingBox"
+                  fx="30%" fy="30%">
+    <stop offset="0%"   style="stop-color:#FFFFFF"/>
+    <stop offset="40%"  style="stop-color:#AA0000"/>
+    <stop offset="100%" style="stop-color:#660000"/>
+  </radialGradient>
+   
+  <circle id="3DBlueCircle" cx="0" cy="0" r="100" 
+          style="fill:url(#blueCircle)"/>
+
+  <path id="stripedArc1"
+        d="m0,-100 a50,50 0 0,1 0,100
+                   a50,50 0 0,0 0,100 z"
+        stroke-dasharray="2 2 2 2"
+        stroke="blue" stroke-width="2"
+        style="fill:url(#redCircle)"/>
+</defs>
+
+<g id="gc" transform="translate(120,120) scale(2,2)" 
+   filter="url(#turbFilter4)">  
+   <use xlink:href="#3DBlueCircle" x="0" y="0"/>
+   <use xlink:href="#stripedArc1"  x="0" y="0"/>
+</g>
+</svg>
+

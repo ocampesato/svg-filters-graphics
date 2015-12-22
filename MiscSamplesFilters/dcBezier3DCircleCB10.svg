@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20001102//EN" 
+ "http://www.w3.org/TR/2000/CR-SVG-20001102/DTD/svg-20001102.dtd"> 
+
+<svg xmlns="http://www.w3.org/2000/svg" 
+     xmlns:xlink="http://www.w3.org/1999/xlink" 
+     width="100%" height="100%"> 
+
+<defs>
+  <pattern id="multiPattern" 
+           width="50" height="50"
+           patternUnits="userSpaceOnUse">
+
+   <linearGradient id="repeatedGradientDefinition"
+      x1="0" y1="0" x2="50" y2="0" 
+      gradientUnits="userSpaceOnUse" spreadMethod="repeat">
+      <stop offset="0%"   style="stop-color:#FF0000"/>
+      <stop offset="100%" style="stop-color:#000000"/>
+   </linearGradient> 
+
+   <rect 
+      style="fill:url(#repeatedGradientDefinition)"
+      x="0" y="0" width="50" height="50"/>
+   </pattern>
+
+  <clipPath id="clipPathDefinition" 
+            clipPathUnits="userSpaceOnUse">
+
+    <path d="M50,50   C20,100 20,250 400,200
+             M100,150 C80,-80 80,150 300,150"
+          style="fill:red;stroke:blue;stroke-width:4;"/>
+
+    <path d="m0,0 l50,50 l50,-50"/>
+
+    <rect   x="30"     y="50"   
+            width="40" height="80"/>
+
+    <circle cx="100" cy="50"  r="10"/>
+    <circle cx="150" cy="90"  r="40"/>
+    <circle cx="200" cy="125" r="10"/>
+    <ellipse cx="250" cy="150" rx="40" ry="20"/>
+  </clipPath>
+
+  <filter
+     id="blurFilter1"
+     filterUnits="objectBoundingBox"
+     x="0" y="0" 
+     width="100%" height="100%"> 
+     <feGaussianBlur stdDeviation="2"/>
+  </filter>
+
+  <radialGradient id="redCircle" 
+                  gradientUnits="objectBoundingBox"
+                  fx="30%" fy="30%">
+   
+    <stop offset="0%"   style="stop-color:#FFFFFF"/>
+    <stop offset="40%"  style="stop-color:#AA0000"/>
+    <stop offset="100%" style="stop-color:#660000"/>
+  </radialGradient>
+   
+  <pattern id="checkerPattern" 
+           width="20" height="20"
+           patternUnits="userSpaceOnUse">
+
+     <rect fill="black"
+           x="0"  y="0"  width="10" height="10"/> 
+
+     <rect fill="yellow"
+           x="10" y="0"  width="10" height="10"/> 
+
+     <rect fill="yellow"
+           x="0"  y="10" width="10" height="10"/> 
+
+     <rect fill="black"
+           x="10" y="10" width="10" height="10"/> 
+  </pattern>
+
+  <rect   id="3DRedCircle" x="0" y="0" width="40" height="40"
+          style="fill:url(#checkerCircle)"/>
+
+  <pattern id="checkerPatternNew" 
+           width="40" height="40"
+           patternUnits="userSpaceOnUse">
+
+  <circle id="3DRedCircleOld" cx="20" cy="20" r="40" 
+          style="fill:url(#redCircle)"/>
+
+  <circle id="3DRedCheckerCircle1" cx="10" cy="10" r="20" 
+          style="fill:url(#checkerRect)"/>
+
+  <circle id="3DRedCheckerCircle2" cx="30" cy="10" r="20" 
+          style="fill:url(#checkerPattern);opacity:.5"/>
+  </pattern>
+</defs>
+
+<g transform="translate(50,50)"
+   clip-path="url(#clipPathDefinition)" 
+   stroke="black" fill="none">
+
+  <rect 
+     style="fill:url(#checkerPatternNew)"
+     x="0" y="0" width="400" height="400"/>
+
+   <use xlink:href="#3DRedCircle"   x="0" y="0"/>
+</g>
+</svg>
+

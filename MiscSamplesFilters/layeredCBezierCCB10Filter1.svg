@@ -1,0 +1,180 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN" 
+  "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+
+<svg width="100%" height="100%" onload="init(evt)"
+     xmlns:xlink="http://www.w3.org/1999/xlink" 
+     xmlns="http://www.w3.org/2000/svg">
+
+  <script type="text/ecmascript"> 
+    <![CDATA[
+     var basePointX      = 0;
+     var basePointY      = 150;
+     var shadowX         = 10;
+     var shadowY         = 10;
+     var currentX        = 0;
+     var currentY        = 0;
+     var deltaX          = 2;
+     var deltaY          = 3;
+     var opacity         = .6;
+     var bezierCount     = 100;
+     var style           = "";
+     var points          = "";
+     var fillColors      = ['red','#880088','blue','red'];
+     var fillCount       = 4;
+     var strokeColors    = ['#880088','white','yellow','red'];
+     var strokeCount     = 4;
+     var strokeWidths    = [1, 4, 8];
+     var widthCount      = 3;
+     var dashStyles      = ["4 4 4 4", "2 2 2 2", "1 1 1 1"];
+     var dashCount       = 3;
+ 
+     var bezierNode      = null;
+     var svgDocument     = null;
+     var gcNode          = null;
+     var svgNS           = "http://www.w3.org/2000/svg";
+ 
+     function init(evt) {
+        svgDocument = evt.target.ownerDocument; 
+        gcNode = svgDocument.getElementById("gc")
+ 
+        drawSpiral();
+     }
+
+     function drawSpiral() {
+        for(var b=0; b<bezierCount; b++) {
+           currentX = basePointX+b*deltaX;
+           currentY = basePointY-b*deltaY;
+
+           points  = "M"+(basePointX+b*deltaX)+","+
+                         (basePointY)+" ";
+           points += "C100,0 200,200 ";
+           points +=     (currentX+300)+","+(currentY+200)+" ";
+
+           if( b == bezierCount-1 ) {
+              style = "fill:url(#blueCircle)";
+           } else if( b == bezierCount-2 ) {
+              style = "fill:url(#checkerPattern3)";
+           } else if( b % 2 == 0 ) {
+              style = "fill:url(#checkerPattern1)";
+           } else {
+              style = "fill:url(#blueCircle)";
+           }
+
+           style += ";stroke:"+strokeColors[b%strokeCount];
+           style += ";stroke-dasharray:"+dashStyles[b%dashCount];
+           style += ";stroke-width:"+strokeWidths[b%widthCount];
+   
+           bezierNode = svgDocument.createElementNS(svgNS, "path");
+           bezierNode.setAttribute("opacity",opacity);
+           bezierNode.setAttribute("style",style);
+           bezierNode.setAttribute("d",    points);
+           gcNode.appendChild(bezierNode);
+        }
+     } // drawSpiral
+  ]]> </script>
+
+<!-- ============================ -->
+<defs>
+  <filter id="turbFilter4" in="SourceImage" 
+           filterUnits="objectBoundingBox">
+      <feTurbulence baseFrequency="0.05" numOctaves="0" 
+                    result="turbulenceOut1"/> 
+        <feDisplacementMap in="SourceGraphic" in2="turbulenceOut1" 
+                           xChannelSelector="B" yChannelSelector="B"
+                           scale="40"/> 
+   </filter>
+
+   <radialGradient id="blueCircle" 
+                   gradientUnits="objectBoundingBox"
+                   fx="30%" fy="30%">
+    
+     <stop offset="0%"   style="stop-color:#FFFFFF"/>
+     <stop offset="40%"  style="stop-color:#0000AA"/>
+     <stop offset="100%" style="stop-color:#000066"/>
+   </radialGradient>
+    
+   <circle id="3DBlueCircle" cx="0" cy="0" r="80" 
+           style="fill:url(#blueCircle)"/>
+
+   <pattern id="checkerPattern1" 
+            width="80" height="80"
+            patternUnits="userSpaceOnUse">
+ 
+      <rect fill="yellow"
+            x="0"  y="0"  width="40" height="40"/> 
+ 
+      <rect fill="red"
+            x="40" y="0"  width="40" height="40"/> 
+ 
+      <rect fill="red"
+            x="0"  y="40" width="40" height="40"/> 
+ 
+      <rect fill="yellow"
+            x="40" y="40" width="40" height="40"/> 
+   </pattern>
+
+     <pattern id="checkerPattern2" 
+              width="80" height="80"
+              patternUnits="userSpaceOnUse">
+   
+        <rect fill="black"
+              x="0"  y="0"  width="40" height="40"/> 
+   
+        <rect fill="yellow"
+              x="40" y="0"  width="40" height="40"/> 
+   
+        <rect fill="yellow"
+              x="0"  y="40" width="40" height="40"/> 
+   
+        <rect fill="black"
+              x="40" y="40" width="40" height="40"/> 
+     </pattern>
+
+     <pattern id="checkerPattern3" 
+              width="20" height="20"
+              patternUnits="userSpaceOnUse">
+   
+        <rect fill="red"
+              x="0"  y="0"  width="10" height="10"/> 
+   
+        <rect fill="yellow"
+              x="10" y="0"  width="10" height="10"/> 
+   
+        <rect fill="yellow"
+              x="0"  y="10" width="10" height="10"/> 
+   
+        <rect fill="red"
+              x="10" y="10" width="10" height="10"/> 
+     </pattern>
+
+     <circle id="checkerCircle3" cx="0" cy="0" r="80" 
+             style="fill:url(#checkerPattern3)"/>
+
+     <circle id="checkerCircle2" cx="0" cy="0" r="80" 
+             style="fill:url(#checkerPattern2)"/>
+
+     <circle id="checkerCircle1"  cx="0" cy="0" r="80" 
+             style="fill:url(#checkerPattern1)"/>
+</defs>
+
+<g id="gc" transform="translate(10,10)"
+  filter="url(#turbFilter4)">
+  <rect x="0" y="0" 
+        width="800" height="500" 
+        fill="none" stroke="none"/>
+
+  <use xlink:href="#3DBlueCircle"   x="100" y="250"/>
+  <use xlink:href="#checkerCircle1" x="100" y="250"
+       opacity=".4"/>
+
+  <use xlink:href="#3DBlueCircle"   x="400" y="250"/>
+  <use xlink:href="#checkerCircle2" x="400" y="250"
+       opacity=".4"/>
+
+  <use xlink:href="#3DBlueCircle"   x="250" y="100"/>
+  <use xlink:href="#checkerCircle3" x="250" y="100"
+       opacity=".4"/>
+</g>
+</svg>
+

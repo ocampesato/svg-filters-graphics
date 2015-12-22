@@ -1,0 +1,255 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN" 
+  "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+
+<svg width="100%" height="100%" onload="init(evt)"
+     xmlns:xlink="http://www.w3.org/1999/xlink" 
+     xmlns="http://www.w3.org/2000/svg">
+
+  <script type="text/ecmascript"> 
+    <![CDATA[
+     var basePointX       = 250;
+     var basePointY       = 250;
+     var slantAngle       = 40;
+     var zSlantX          = 0;
+     var zSlantY          = 0;
+     var cosAngle         = Math.cos(slantAngle*Math.PI/180);
+     var sinAngle         = Math.sin(slantAngle*Math.PI/180);
+     var strokeWidth      = 4;
+     var style            = "stroke:red;stroke-width:4";
+     var dashStyles       = ['4 4 4 4',
+                             '4 4 4 4',
+                             '4 4 4 4'];
+     var dashCount        = 3;
+     var strokeColors     = ['red','green',
+                             'blue','magenta','pink'];
+     var colorCount       = 5;
+     var axisCount        = 3;
+     var posAxesLengths   = [250,300,180]; //z,x,y
+     var negAxesLengths   = [250,200,200]; //z,x,y
+     var zValue           = 0;
+     var xValue           = 0;
+     var yValue           = 0;
+     var opacity          = 0.5;
+     var vertexCount      = 4;
+     var polygonXPts      = Array(vertexCount);
+     var polygonYPts      = Array(vertexCount);
+
+     var Constant         = 80;
+     var radius1          = 100; 
+     var radius2          = 150; 
+     var radius3          = 150; 
+     var minU             = 0;
+     var maxU             = 180; 
+     var deltaU           = 5;
+     var minV             = 0;
+     var maxV             = 360;
+     var deltaV           = 5;
+     var rVal             = 0;
+     var gVal             = 0;
+     var bVal             = 0;
+     var index            = 0;
+
+     var pGonNode         = null;
+     var lineNode         = null;
+     var ellipseNode      = null;
+     var polygonNode      = null;
+     var svgDocument      = null;
+     var gcNode           = null;
+     var svgNS            = "http://www.w3.org/2000/svg";
+ 
+     function init(evt) {
+        svgDocument = evt.target.ownerDocument; 
+        gcNode = svgDocument.getElementById("gc")
+ 
+        draw3DAxes();
+        draw3DSurface();
+     }
+
+     function draw3DAxes() {
+        // left outward (positive) z-axis 
+        zSlantX = posAxesLengths[0]*Math.sin(
+                           slantAngle*Math.PI/180);
+
+        zSlantY = posAxesLengths[0]*Math.cos(
+                           slantAngle*Math.PI/180);
+
+        style  = "stroke:"+strokeColors[0];
+        style += ";stroke-width:"+strokeWidth;
+
+        lineNode = svgDocument.createElementNS(svgNS, "line");
+        lineNode.setAttribute("style", style);
+        lineNode.setAttribute("x1", basePointX);
+        lineNode.setAttribute("y1", basePointY);
+        lineNode.setAttribute("x2", basePointX-zSlantX);
+        lineNode.setAttribute("y2", basePointY+zSlantY);
+        gcNode.appendChild(lineNode);
+
+        // right receding (negative) z-axis 
+        zSlantX = negAxesLengths[0]*Math.sin(
+                           slantAngle*Math.PI/180);
+
+        zSlantY = negAxesLengths[0]*Math.cos(
+                           slantAngle*Math.PI/180);
+
+        style  = "stroke:"+strokeColors[0];
+        style += ";stroke-width:"+strokeWidth;
+        style += ";stroke-dasharray:"+dashStyles[0];
+
+        lineNode = svgDocument.createElementNS(svgNS, "line");
+        lineNode.setAttribute("style", style);
+        lineNode.setAttribute("x1", basePointX);
+        lineNode.setAttribute("y1", basePointY);
+        lineNode.setAttribute("x2", basePointX+zSlantX);
+        lineNode.setAttribute("y2", basePointY-zSlantY);
+        gcNode.appendChild(lineNode);
+
+        // upper vertical y-axis 
+        style  = "stroke:"+strokeColors[2];
+        style += ";stroke-width:"+strokeWidth;
+
+        lineNode = svgDocument.createElementNS(svgNS, "line");
+        lineNode.setAttribute("style", style);
+        lineNode.setAttribute("x1", basePointX);
+        lineNode.setAttribute("y1", basePointY);
+        lineNode.setAttribute("x2", basePointX);
+        lineNode.setAttribute("y2", basePointY-posAxesLengths[2]);
+        gcNode.appendChild(lineNode);
+
+        // lower vertical y-axis 
+        style  = "stroke:"+strokeColors[2];
+        style += ";stroke-width:"+strokeWidth;
+        style += ";stroke-dasharray:"+dashStyles[1];
+
+        lineNode = svgDocument.createElementNS(svgNS, "line");
+        lineNode.setAttribute("style", style);
+        lineNode.setAttribute("x1", basePointX);
+        lineNode.setAttribute("y1", basePointY);
+        lineNode.setAttribute("x2", basePointX);
+        lineNode.setAttribute("y2", basePointY+negAxesLengths[2]);
+        gcNode.appendChild(lineNode);
+
+        // right horizontal x-axis 
+        style  = "stroke:"+strokeColors[1];
+        style += ";stroke-width:"+strokeWidth;
+
+        lineNode = svgDocument.createElementNS(svgNS, "line");
+        lineNode.setAttribute("style", style);
+        lineNode.setAttribute("x1", basePointX);
+        lineNode.setAttribute("y1", basePointY);
+        lineNode.setAttribute("x2", basePointX+posAxesLengths[1]);
+        lineNode.setAttribute("y2", basePointY)
+        gcNode.appendChild(lineNode);
+
+        // left horizontal x-axis 
+        style  = "stroke:"+strokeColors[1];
+        style += ";stroke-width:"+strokeWidth;
+        style += ";stroke-dasharray:"+dashStyles[2];
+
+        lineNode = svgDocument.createElementNS(svgNS, "line");
+        lineNode.setAttribute("style", style);
+        lineNode.setAttribute("x1", basePointX);
+        lineNode.setAttribute("y1", basePointY);
+        lineNode.setAttribute("x2", basePointX-negAxesLengths[1]);
+        lineNode.setAttribute("y2", basePointY)
+        gcNode.appendChild(lineNode);
+     }
+
+     function draw3DSurface() {
+        for(var v=minV; v<maxV; v+=deltaV) {
+           for(var u=minU; u<maxU; u+=deltaU) {
+              // calculate coordinates of vertices...
+              cosU    = Math.cos(u*Math.PI/180);
+              sinU    = Math.sin(u*Math.PI/180);
+              sinV    = Math.sin(v*Math.PI/180);
+              cosV    = Math.cos(v*Math.PI/180);
+
+              zCoord  = radius1*cosU;
+              xCoord  = radius2*cosV+radius1*sinU;
+              yCoord  = radius3*sinV;
+
+              polygonXPts[0] = xCoord-zCoord*sinAngle;
+              polygonYPts[0] = yCoord+zCoord*cosAngle;
+
+              cosU    = Math.cos((u+deltaU)*Math.PI/180);
+              sinU    = Math.sin((u+deltaU)*Math.PI/180);
+              sinV    = Math.sin(v*Math.PI/180);
+              cosV    = Math.cos(v*Math.PI/180);
+
+              zCoord  = radius1*cosU;
+              xCoord  = radius2*cosV+radius1*sinU;
+              yCoord  = radius3*sinV;
+
+              polygonXPts[1] = xCoord-zCoord*sinAngle;
+              polygonYPts[1] = yCoord+zCoord*cosAngle;
+
+              cosU    = Math.cos((u+deltaU)*Math.PI/180);
+              sinU    = Math.sin((u+deltaU)*Math.PI/180);
+              sinV    = Math.sin((v+deltaV)*Math.PI/180);
+              cosV    = Math.cos((v+deltaV)*Math.PI/180);
+
+              zCoord  = radius1*cosU;
+              xCoord  = radius2*cosV+radius1*sinU;
+              yCoord  = radius3*sinV;
+
+              polygonXPts[2] = xCoord-zCoord*sinAngle;
+              polygonYPts[2] = yCoord+zCoord*cosAngle;
+
+              cosU    = Math.cos(u*Math.PI/180);
+              sinU    = Math.sin(u*Math.PI/180);
+              sinV    = Math.sin((v+deltaV)*Math.PI/180);
+              cosV    = Math.cos((v+deltaV)*Math.PI/180);
+
+              zCoord  = radius1*cosU;
+              xCoord  = radius2*cosV+radius1*sinU;
+              yCoord  = radius3*sinV;
+
+              polygonXPts[3] = xCoord-zCoord*sinAngle;
+              polygonYPts[3] = yCoord+zCoord*cosAngle;
+
+              points = "M";
+              for(var p=0; p<vertexCount; p++) {
+                 points += (basePointX+polygonXPts[p])+","+
+                           (basePointY-polygonYPts[p])+" ";
+              }
+
+              rVal = (u-minU)*255/(maxU-minU);
+              bVal = 100*v*255/maxV;
+              bVal %= 255;
+
+              polygonNode = svgDocument.createElementNS(svgNS, "path");
+              polygonNode.setAttribute("style",style);
+              polygonNode.setAttribute("opacity",opacity);
+              polygonNode.setAttribute("d", points);
+              gcNode.appendChild(polygonNode);
+           }
+        }
+     }
+  ]]> </script>
+
+<!-- ============================ -->
+<defs>
+  <filter id="turbFilter4" in="SourceImage" 
+           filterUnits="objectBoundingBox">
+      <feTurbulence baseFrequency="0.05" numOctaves="0" 
+                    result="turbulenceOut1"/> 
+        <feDisplacementMap in="SourceGraphic" in2="turbulenceOut1" 
+                           xChannelSelector="B" yChannelSelector="B"
+                           scale="2"/> 
+
+      <feDiffuseLighting in="SourceGraphic" 
+                         diffuseConstant="8" 
+                         surfaceScale="2" 
+                         style="lighting-color:#FFFFCC;">
+         <feSpotLight x="30" y="10" z="80" 
+                      pointsAtX="30" pointsAtY="30" pointsAtZ="0" 
+                      specularExponent="1"/>
+     </feDiffuseLighting>
+   </filter>
+</defs>
+
+<g id="gc" transform="translate(20,0)" 
+   filter="url(#turbFilter4)">  
+</g>
+</svg>
+

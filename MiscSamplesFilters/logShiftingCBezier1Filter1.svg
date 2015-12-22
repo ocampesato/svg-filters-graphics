@@ -1,0 +1,152 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN" 
+  "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+
+<svg width="100%" height="100%" onload="init(evt)"
+     xmlns:xlink="http://www.w3.org/1999/xlink" 
+     xmlns="http://www.w3.org/2000/svg">
+
+  <script type="text/ecmascript"> 
+    <![CDATA[
+     var basePointX     = 10;
+     var basePointY     = 160;
+     var strokeColor    = "";
+     var bezierX        = 0;
+     var offsetX        = 0;
+     var deltaX         = 50;
+     var maxYValue      = 500;
+     var angle          = 0;
+     var startAngle     = 0;
+     var endAngle       = 540;
+     var sineYPts       = Array(endAngle+1);
+     var vertexCount    = 4;
+     var bezierXPts     = Array(vertexCount);
+     var bezierYPts     = Array(vertexCount);
+     var amplitude      = 50;
+     var frequency      = 3;
+     var counter        = 0;
+     var rVal           = 0;
+     var gVal           = 0;
+     var bVal           = 0;
+  
+     var pathNode       = null;
+     var svgDocument    = null;
+     var gcNode         = null;
+     var svgNS           = "http://www.w3.org/2000/svg";
+
+     function init(evt) {
+        svgDocument = evt.target.ownerDocument; 
+        gcNode = svgDocument.getElementById("gc")
+ 
+        drawCurve();
+     }
+
+     function initializePoints() {
+        for(var x=1; x<=endAngle; x++) {
+           sineYPts[x] = amplitude*Math.log(
+                           Math.abs(frequency*x*Math.PI/180))*
+                           Math.sin(frequency*x*Math.PI/180);
+
+           if( sineYPts[x] > maxYValue ) {
+              sineYPts[x] = maxYValue;
+           }
+        }
+     }
+
+     function updateBezierPoints(bezierX) {
+        for(var v=0; v<vertexCount; v++) {
+           offsetX = basePointX+bezierX+v*deltaX;
+           bezierXPts[v] = offsetX;
+           bezierYPts[v] = basePointY+sineYPts[offsetX];
+        }
+
+        points  = "m"+bezierXPts[0]+","+bezierYPts[0]+" ";
+        points += "C"+bezierXPts[1]+","+bezierYPts[1]+" ";
+        points +=     bezierXPts[2]+","+bezierYPts[2]+" ";
+        points +=     bezierXPts[3]+","+bezierYPts[3]+" ";
+     }
+
+     function drawCurve() {
+        for(var x=startAngle; x<endAngle-deltaX; x++) {
+           updateBezierPoints(x);
+
+           rVal = x*255/endAngle;
+           strokeColor = "rgb("+rVal+","+gVal+","+bVal+")";
+
+           if( ++counter % 4 == 0 ) {
+              style  = "stroke:"+strokeColor;
+              style += ";stroke-width:4"
+              style += ";fill:none";
+           } else if( counter % 4 == 1 ) {
+              style  = "stroke:url(#multiPattern)";
+              style += ";stroke-width:4"
+              style += ";fill:none";
+           } else if( counter % 4 == 2 ) {
+              style  = "stroke:url(#blueCircle)";
+              style += ";stroke-width:4"
+              style += ";fill:none";
+           } else {
+              style  = "stroke:url(#redCircle)";
+              style += ";stroke-width:4"
+              style += ";fill:none";
+           }
+
+           pathNode = svgDocument.createElementNS(svgNS, "path");
+           pathNode.setAttribute("d", points);
+           pathNode.setAttribute("style", style);
+           gcNode.appendChild(pathNode); 
+        }
+     }
+  ]]> </script>
+
+<!-- ============================ -->
+<defs>
+   <filter id="turbFilter4" in="SourceImage" 
+           filterUnits="objectBoundingBox">
+      <feTurbulence baseFrequency="0.05" numOctaves="0" 
+                    result="turbulenceOut1"/> 
+        <feDisplacementMap in="SourceGraphic" in2="turbulenceOut1" 
+                           xChannelSelector="B" yChannelSelector="B"
+                           scale="100"/> 
+   </filter>
+
+   <radialGradient id="blueCircle" 
+                   gradientUnits="objectBoundingBox"
+                   fx="30%" fy="30%">
+     <stop offset="0%"   style="stop-color:#FFFFFF"/>
+     <stop offset="40%"  style="stop-color:#0000AA"/>
+     <stop offset="100%" style="stop-color:#000066"/>
+   </radialGradient>
+
+   <radialGradient id="redCircle" 
+                   gradientUnits="objectBoundingBox"
+                   fx="30%" fy="30%">
+     <stop offset="0%"   style="stop-color:#FFFFFF"/>
+     <stop offset="40%"  style="stop-color:#AA0000"/>
+     <stop offset="100%" style="stop-color:#660000"/>
+   </radialGradient>
+
+   <pattern id="multiPattern" 
+            width="50" height="50"
+            patternUnits="userSpaceOnUse">
+
+     <linearGradient id="repeatedGradientDefinition"
+        x1="0" y1="0" x2="50" y2="0" 
+        gradientUnits="userSpaceOnUse" spreadMethod="repeat">
+        <stop offset="0%"   style="stop-color:#FF0000"/>
+        <stop offset="100%" style="stop-color:#000000"/>
+     </linearGradient> 
+  
+     <rect 
+        style="fill:url(#repeatedGradientDefinition)"
+        x="0" y="0" width="50" height="50"/>
+   </pattern>
+</defs>
+
+<g id="gc" transform="translate(20,20)" filter="url(#turbFilter4)">  
+  <rect x="0" y="0" 
+        width="800" height="500" 
+        fill="none" stroke="none"/>
+</g>
+</svg>
+

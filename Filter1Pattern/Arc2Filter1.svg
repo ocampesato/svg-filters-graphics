@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20001102//EN" 
+ "http://www.w3.org/TR/2000/CR-SVG-20001102/DTD/svg-20001102.dtd"> 
+
+<svg xmlns="http://www.w3.org/2000/svg" 
+     xmlns:xlink="http://www.w3.org/1999/xlink"> 
+<defs>
+  <filter id="turbFilter4" in="SourceImage" 
+           filterUnits="objectBoundingBox">
+      <feTurbulence baseFrequency="0.05" numOctaves="1" 
+                    result="turbulenceOut1"/> 
+        <feDisplacementMap in="SourceGraphic" in2="turbulenceOut1" 
+                           xChannelSelector="B" yChannelSelector="B"
+                           scale="100"/> 
+   </filter>
+
+     <radialGradient id="blueCircle" 
+                     gradientUnits="objectBoundingBox"
+                     fx="30%" fy="30%">
+       <stop offset="0%"   style="stop-color:#FFFFFF"/>
+       <stop offset="40%"  style="stop-color:#0000AA"/>
+       <stop offset="100%" style="stop-color:#000066"/>
+     </radialGradient>
+
+     <radialGradient id="redCircle" 
+                     gradientUnits="objectBoundingBox"
+                     fx="30%" fy="30%">
+       <stop offset="0%"   style="stop-color:#FFFFFF"/>
+       <stop offset="40%"  style="stop-color:#AA0000"/>
+       <stop offset="100%" style="stop-color:#660000"/>
+     </radialGradient>
+
+   <g id="arcSwirl">
+     <path id="outerArc"
+           d="m0,0 a25,25 0 0,1 50,0
+                   a25,25 0 0,1 50,0
+                   C50,-125 75,0 0,100"
+           fill="url(#blueCircle)"
+           stroke="blue" stroke-width="4"/>
+
+     <path id="innerArc"
+           d="m0,0 C50,-75 25,0 0,100"
+           fill="white"
+           stroke="blue" stroke-width="4"/>
+   </g>
+
+   <g id="hookedArcs1">
+     <path id="outerArc"
+           d="m0,0 a80,80 0 0,1 100,0
+                   l0,-20
+                   a80,80 0 0,1 -100,0
+                   l50,-20
+                   l50,20"
+           fill="url(#blueCircle)"
+           stroke="blue" stroke-width="4"/>
+   </g>
+
+   <g id="hookedArcs2">
+     <path id="outerArc"
+           d="m0,0 c40,80 80,20 100,0
+                   c-40,-80 -80,-20 -100,0"
+           fill="url(#blueCircle)"
+           stroke="blue" stroke-width="4"/>
+   </g>
+</defs>
+
+<g id="leaf2" transform="translate(0,0) scale(3.0,3.0)" 
+   filter="url(#turbFilter4)">  
+   <use xlink:href="#arcSwirl2"   x="50" y="0"/>
+   <use xlink:href="#hookedArcs1" x="50" y="0"/>
+   <use xlink:href="#hookedArcs2" x="50" y="50"/>
+</g>
+</svg>
+

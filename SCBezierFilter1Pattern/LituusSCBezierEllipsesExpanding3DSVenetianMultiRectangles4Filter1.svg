@@ -1,0 +1,246 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN" 
+  "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+
+<svg width="100%" height="100%" onload="init(evt)"
+     xmlns="http://www.w3.org/2000/svg">
+
+  <script type="text/ecmascript"> 
+   <![CDATA[
+    var basePointX    = 500;
+    var basePointY    = 250;
+    var currentX      = 0;
+    var currentY      = 0;
+    var offsetX       = 0;
+    var offsetY       = 0;
+    var radius        = 0;
+    var minorAxis     = 10;
+    var majorAxis     = 20;
+    var Constant      = 200;
+    var angle         = 0;
+    var maxAngle      = 720;
+    var angleDelta    = 3;
+    var rGap          = 4;
+    var rWidth        = 2*majorAxis;
+    var rHeight       = 2*minorAxis;
+    var widthDelta    = 4;
+    var heightDelta   = 2;
+    var strokeWidth   = 2;
+    var xVertex       = 0;
+    var yVertex       = 0;
+    var slantX        = 20;
+    var slantY        = 10;
+    var points        = "";
+    var style         = "";
+    var rVal          = 0;
+    var gVal          = 0;
+    var bVal          = 0;
+ 
+    var rectNode      = null;
+    var cBezierNode   = null;
+    var ellipseNode   = null;
+    var svgDocument   = null;
+    var gcNode        = null;
+    var svgNS         = "http://www.w3.org/2000/svg";
+
+    function init(evt) {
+       svgDocument = evt.target.ownerDocument; 
+       gcNode = svgDocument.getElementById("gc")
+
+       drawSpiral();
+    }
+
+    function drawSpiral() {
+       for(angle=1; angle<maxAngle; angle+=angleDelta) {
+          radius  = Constant*Constant/angle;
+  
+          offsetX = radius*Math.cos(angle*Math.PI/180);
+          offsetY = radius*Math.sin(angle*Math.PI/180);
+
+          currentX = basePointX+offsetX;
+          currentY = basePointY-offsetY;
+          addEllipse(currentX, currentY);
+
+          currentX = basePointX-offsetX;
+          currentY = basePointY+offsetY;
+          addEllipse(currentX, currentY);
+
+          if( (angle > 0) && (angle % rGap == 0) ) {
+             addRectangleNode();
+             rWidth  += widthDelta;
+             rHeight += heightDelta;
+          }
+       }
+    } // drawSpiral
+
+    function drawCBezierArc() {
+       // outer bezier arc...
+       points  = "m"+(currentX)+","+(currentY)+" ";
+       points += "C"+(majorAxis)+","+(-5*majorAxis/4)+" ";
+       points +=     (0)+","+(4*majorAxis/2)+" ";
+       points +=     (0)+","+(3*majorAxis/2)+" ";
+       points += "S"+(0)+","+(3*majorAxis/2)+" ";
+       points +=     (0)+","+(4*majorAxis/2)+" ";
+
+       style  = "fill:red;stroke-width:8";
+       style += ";stroke-dasharray:8 8 8 8";
+
+       cBezierNode = svgDocument.createElementNS(svgNS, "path");
+       cBezierNode.setAttribute("d", points);
+       cBezierNode.setAttribute("style", style);
+       gcNode.appendChild(cBezierNode);
+
+       // inner bezier arc...
+       points  = "m"+(currentX)+","+(currentY)+" ";
+       points += "C"+(2*majorAxis/2)+","+(-3*majorAxis/4)+" ";
+       points +=     (majorAxis/2)+","+(0)+" ";
+       points +=     (0)+","+(2*majorAxis)+" ";
+
+       cBezierNode = svgDocument.createElementNS(svgNS, "path");
+       cBezierNode.setAttribute("d", points);
+       cBezierNode.setAttribute("style", "stroke:red;stroke-width:8");
+       gcNode.appendChild(cBezierNode);
+    }
+
+    function addEllipse() {
+       rVal = angle*255/maxAngle;
+       gVal = 0;
+       bVal = 0;
+
+       fillColor = "rgb("+rVal+","+gVal+","+bVal+")";
+       strokeColor = "rgb("+rVal+","+gVal+","+bVal+")";
+
+       style  = "fill:"+strokeColor;
+       style += ";stroke:yellow";
+       style += ";stroke-width:"+strokeWidth;
+
+       ellipseNode = document.createElementNS(svgNS, "ellipse");
+       ellipseNode.setAttribute("style",style);
+       ellipseNode.setAttribute("cx", currentX);
+       ellipseNode.setAttribute("cy", currentY);
+       ellipseNode.setAttribute("rx", majorAxis);
+       ellipseNode.setAttribute("ry", minorAxis);
+       gcNode.appendChild(ellipseNode);
+
+       drawCBezierArc();
+    } // addEllipse
+
+    function addRectangleNode() {
+     //style  = "fill:yellow;stroke:red;";
+       style  = "fill:url(#multiPattern1);";
+       style += "stroke-width:"+strokeWidth;
+
+       rectNode = svgDocument.createElementNS(svgNS, "rect");
+       rectNode.setAttribute("style",style);
+       rectNode.setAttribute("x",      currentX-rWidth/2);
+       rectNode.setAttribute("y",      currentY-rHeight/2);
+       rectNode.setAttribute("width",  rWidth);
+       rectNode.setAttribute("height", rHeight);
+       gcNode.appendChild(rectNode);
+
+       // top horizontal strip... 
+       xVertex = currentX-rWidth/2;
+       yVertex = currentY-rHeight/2;
+       points  = xVertex+" "+yVertex+" ";
+
+       xVertex = currentX-rWidth/2+rWidth;
+       yVertex = currentY-rHeight/2;
+       points  += xVertex+" "+yVertex+" ";
+
+       xVertex  = currentX-rWidth/2+rWidth+slantX;
+       yVertex  = currentY-rHeight/2-slantY;
+       points  += xVertex+" "+yVertex+" ";
+
+       xVertex  = currentX-rWidth/2+slantX;
+       yVertex  = currentY-rHeight/2-slantY;
+       points  += xVertex+" "+yVertex;
+
+       style  = "fill:black;stroke:red;";
+       style += "stroke-width:"+strokeWidth;
+
+       polygonNode = svgDocument.createElementNS(svgNS, "polygon");
+       polygonNode.setAttribute("style",style);
+       polygonNode.setAttribute("points",points);
+       gcNode.appendChild(polygonNode);
+
+       // right vertical strip... 
+       xVertex = currentX-rWidth/2+rWidth;
+       yVertex = currentY-rHeight/2;
+       points  = xVertex+" "+yVertex+" ";
+
+       xVertex  = currentX-rWidth/2+rWidth+slantX;
+       yVertex  = currentY-rHeight/2-slantY;
+       points  += xVertex+" "+yVertex+" ";
+
+       xVertex  = currentX-rWidth/2+rWidth+slantX;
+       yVertex  = currentY-rHeight/2-slantY+rHeight;
+       points  += xVertex+" "+yVertex+" ";
+
+       xVertex  = currentX-rWidth/2+rWidth;
+       yVertex  = currentY-rHeight/2+rHeight;
+       points  += xVertex+" "+yVertex+" ";
+
+       style  = "fill:black;stroke:red;";
+       style += "stroke-width:"+strokeWidth;
+
+       polygonNode = svgDocument.createElementNS(svgNS, "polygon");
+       polygonNode.setAttribute("style",style);
+       polygonNode.setAttribute("points",points);
+       gcNode.appendChild(polygonNode);
+    }
+  ]]> </script>
+
+<!-- ============================ -->
+<defs>
+  <filter id="turbFilter4" in="SourceImage" 
+           filterUnits="objectBoundingBox">
+      <feTurbulence baseFrequency="0.25" numOctaves="1" 
+                    result="turbulenceOut1"/> 
+        <feDisplacementMap in="SourceGraphic" in2="turbulenceOut1" 
+                           xChannelSelector="B" yChannelSelector="G"
+                           scale="10"/> 
+   </filter>
+
+  <linearGradient id="redGradientDefinition"
+     x1="0" y1="0" x2="40" y2="40" 
+     gradientUnits="userSpaceOnUse" spreadMethod="repeat">
+     <stop offset="0%" style="stop-color:#FF0000"/>
+     <stop offset="100%" style="stop-color:#000000"/>
+  </linearGradient> 
+
+  <linearGradient id="blueGradientDefinition"
+     x1="0" y1="0" x2="40" y2="40" 
+     gradientUnits="userSpaceOnUse" spreadMethod="repeat">
+     <stop offset="20%" style="stop-color:#0000FF"/>
+     <stop offset="80%" style="stop-color:#000000"/>
+  </linearGradient> 
+  
+  <pattern id="multiPattern1" 
+           width="160" height="160"
+           patternUnits="userSpaceOnUse">
+     <rect 
+        x="0" y="0" width="80" height="80"
+        style="fill:url(#redGradientDefinition);stroke:none"/>
+   
+     <rect 
+        x="80" y="0" width="80" height="80"
+        style="fill:url(#blueGradientDefinition);stroke:none"/>
+   
+     <rect 
+        x="0" y="80" width="80" height="80"
+        style="fill:url(#blueGradientDefinition);stroke:none"/>
+   
+     <rect 
+        x="80" y="80" width="80" height="80"
+        style="fill:url(#redGradientDefinition);stroke:none"/>
+   </pattern>
+</defs>
+
+<g id="gc" transform="translate(10,10)" 
+   filter="url(#turbFilter4)">  
+  <rect x="0" y="0" 
+        width="800" height="500" 
+        fill="none" stroke="none"/>
+</g>
+</svg>
+

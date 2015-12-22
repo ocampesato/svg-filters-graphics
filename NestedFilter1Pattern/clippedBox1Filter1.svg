@@ -1,0 +1,211 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN" 
+  "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+
+<svg width="100%" height="100%" onload="init(evt)"
+     xmlns:xlink="http://www.w3.org/1999/xlink" 
+     xmlns="http://www.w3.org/2000/svg">
+
+  <script type="text/ecmascript"> 
+    <![CDATA[
+     var basePointX      = 100;
+     var basePointY      = 120;
+     var currentX        = 0;
+     var currentY        = 0;
+     var rectHeight      = 100;
+     var rectWidth       = 160;
+     var slantLength     = 120;
+     var slantAngle      = 20;
+     var slantX          = 80;
+     var slantY          = 80;
+     var pVertexCount    = 4;
+     var rectXPts        = Array(pVertexCount);
+     var rectYPts        = Array(pVertexCount);
+     var tVertexCount    = 3;
+     var pGonXPts        = Array(tVertexCount);
+     var pGonYPts        = Array(tVertexCount);
+     var opacity         = .5;
+     var style           = "";
+     var points          = "";
+     var fillColors      = ["red","green","blue",
+                            "yellow","white","black"];
+     var strokeColor     = "yellow";
+     var dashStyle       = "2 2 2 2";
+     var strokeWidth     = 1;
+     var strokeColor     = "black";
+ 
+     var pGonNode        = null;
+     var rectNode        = null;
+     var svgDocument     = null;
+     var gcNode          = null;
+     var svgNS           = "http://www.w3.org/2000/svg";
+ 
+     function init(evt) {
+        svgDocument = evt.target.ownerDocument; 
+        gcNode = svgDocument.getElementById("gc")
+
+        drawClippedBox();
+     }
+
+     function drawClippedBox() {
+        slantX = slantLength*Math.cos(slantAngle*Math.PI/180);
+        slantY = slantLength*Math.sin(slantAngle*Math.PI/180);
+
+        // initialize reference rectangle
+        // clockwise from upper-left vertex...
+        rectXPts[0] = basePointX;
+        rectYPts[0] = basePointY;
+
+        rectXPts[1] = basePointX+rectWidth;
+        rectYPts[1] = basePointY;
+
+        rectXPts[2] = basePointX+rectWidth;
+        rectYPts[2] = basePointY+rectHeight;
+
+        rectXPts[3] = basePointX;
+        rectYPts[3] = basePointY+rectHeight;
+
+        // draw rear face...
+        points = "";
+        for(var v=0; v<pVertexCount; v++) { 
+           points += (rectXPts[v]+slantX)+","+
+                     (rectYPts[v]-slantY)+" ";
+        } 
+
+        style = "fill:"+fillColors[5];
+        style += ";stroke:"+strokeColor;
+        style += ";stroke-dasharray:"+dashStyle;
+        style += ";stroke-width:"+strokeWidth;
+  
+        pGonNode = svgDocument.createElementNS(svgNS, "polygon");
+        pGonNode.setAttribute("style",style);
+        pGonNode.setAttribute("points",points);
+        gcNode.appendChild(pGonNode);
+
+        // draw front triangular face...
+        // clockwise from upper-left vertex...
+        pGonXPts[0] = rectXPts[0];
+        pGonYPts[0] = rectYPts[0];
+
+        pGonXPts[1] = rectXPts[2];
+        pGonYPts[1] = rectYPts[2];
+
+        pGonXPts[2] = rectXPts[3];
+        pGonYPts[2] = rectYPts[3];
+
+        points = "";
+        for(var v=0; v<tVertexCount; v++) { 
+           points += pGonXPts[v]+","+pGonYPts[v]+" ";
+        } 
+
+        style = "fill:"+fillColors[0];
+        style += ";stroke:"+strokeColor;
+        style += ";stroke-dasharray:"+dashStyle;
+        style += ";stroke-width:"+strokeWidth;
+  
+        pGonNode = svgDocument.createElementNS(svgNS, "polygon");
+        pGonNode.setAttribute("style",style);
+        pGonNode.setAttribute("points",points);
+        gcNode.appendChild(pGonNode);
+
+        // draw top face...
+        // clockwise from left-most vertex...
+        pGonXPts[0] = rectXPts[0];
+        pGonYPts[0] = rectYPts[0];
+
+        pGonXPts[1] = rectXPts[0]+slantX;
+        pGonYPts[1] = rectYPts[0]-slantY;
+
+        pGonXPts[2] = rectXPts[1]+slantX;
+        pGonYPts[2] = rectYPts[1]-slantY;
+
+        points = "";
+        for(var v=0; v<tVertexCount; v++) { 
+           points += pGonXPts[v]+","+pGonYPts[v]+" ";
+        } 
+
+        style = "fill:"+fillColors[1];
+        style += ";stroke:"+strokeColor;
+        style += ";stroke-dasharray:"+dashStyle;
+        style += ";stroke-width:"+strokeWidth;
+  
+        pGonNode = svgDocument.createElementNS(svgNS, "polygon");
+        pGonNode.setAttribute("style",style);
+        pGonNode.setAttribute("points",points);
+        gcNode.appendChild(pGonNode);
+
+        // draw clipped face...
+        // clockwise from left-most vertex...
+        pGonXPts[0] = rectXPts[0];
+        pGonYPts[0] = rectYPts[0];
+
+        pGonXPts[1] = rectXPts[1]+slantX;
+        pGonYPts[1] = rectYPts[1]-slantY;
+
+        pGonXPts[2] = rectXPts[2];
+        pGonYPts[2] = rectYPts[2];
+
+        points = "";
+        for(var v=0; v<tVertexCount; v++) { 
+           points += pGonXPts[v]+","+pGonYPts[v]+" ";
+        } 
+
+        style = "fill:"+fillColors[2];
+        style += ";stroke:"+strokeColor;
+        style += ";stroke-dasharray:"+dashStyle;
+        style += ";stroke-width:"+strokeWidth;
+  
+        pGonNode = svgDocument.createElementNS(svgNS, "polygon");
+        pGonNode.setAttribute("style",style);
+        pGonNode.setAttribute("points",points);
+        pGonNode.setAttribute("opacity",opacity);
+        gcNode.appendChild(pGonNode);
+
+        // draw right face...
+        // clockwise from left-most vertex...
+        pGonXPts[0] = rectXPts[2];
+        pGonYPts[0] = rectYPts[2];
+
+        pGonXPts[1] = rectXPts[1]+slantX;
+        pGonYPts[1] = rectYPts[1]-slantY;
+
+        pGonXPts[2] = rectXPts[2]+slantX;
+        pGonYPts[2] = rectYPts[2]-slantY;
+
+        points = "";
+        for(var v=0; v<tVertexCount; v++) { 
+           points += pGonXPts[v]+","+pGonYPts[v]+" ";
+        } 
+
+        style = "fill:"+fillColors[3];
+        style += ";stroke:"+strokeColor;
+        style += ";stroke-dasharray:"+dashStyle;
+        style += ";stroke-width:"+strokeWidth;
+  
+        pGonNode = svgDocument.createElementNS(svgNS, "polygon");
+        pGonNode.setAttribute("style",style);
+        pGonNode.setAttribute("points",points);
+        gcNode.appendChild(pGonNode);
+     } // drawSpiral
+  ]]> </script>
+
+<!-- ============================ -->
+<defs>
+  <filter id="turbFilter4" in="SourceImage" 
+           filterUnits="objectBoundingBox">
+      <feTurbulence baseFrequency="0.05" numOctaves="3" 
+                    result="turbulenceOut1"/> 
+        <feDisplacementMap in="SourceGraphic" in2="turbulenceOut1" 
+                           xChannelSelector="B" yChannelSelector="B"
+                           scale="30"/> 
+   </filter>
+</defs>
+
+<g id="gc" transform="translate(20,20)"
+   filter="url(#turbFilter4)">  
+  <rect x="0" y="0" 
+        width="800" height="500" 
+        fill="none" stroke="none"/>
+</g>
+</svg>
+

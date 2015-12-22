@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
+ "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+
+<svg xmlns="http://www.w3.org/2000/svg" 
+     xmlns:xlink="http://www.w3.org/1999/xlink" 
+     width="100%" height="100%"> 
+
+  <defs>
+    <filter id="glossyFilter1">
+       <feGaussianBlur in="SourceAlpha" 
+                       stdDeviation="16" 
+                       result="myBlur1"/>
+
+       <feSpecularLighting 
+              in="myBlur1" surfaceScale="10" 
+              style="lighting-color:yellow"
+              specularConstant="1" specularExponent="20" 
+              result="mySpecular1" kernelUnitLength="1">
+
+          <feDistantLight azimuth="-30" elevation="30"/>
+       </feSpecularLighting>
+
+      <feFlood flood-color="#888800" 
+               flood-opacity="0.8" 
+               result="myFlood1"/>
+
+    <feComposite in="mySpecular1" in2="myFlood1" 
+                 operator="arithmetic" 
+                 k1="12.5" k2="1.0" k3="0.5" k4="0" 
+                 result="myFilterDone"/>
+    </filter>
+
+     <pattern id="checkerPattern1" 
+              width="10" height="10"
+              patternUnits="userSpaceOnUse">
+        <rect fill="blue"
+              x="0"  y="0"  width="5" height="5"/> 
+        <rect fill="yellow"
+              x="5" y="0"   width="5" height="5"/> 
+        <rect fill="yellow"
+              x="0"  y="5"  width="5" height="5"/> 
+        <rect fill="blue"
+              x="5" y="5"   width="5" height="5"/> 
+     </pattern>
+
+     <pattern id="checkerPattern2" 
+              width="20" height="20"
+              patternUnits="userSpaceOnUse">
+        <rect fill="blue"
+              x="0"  y="0"   width="10" height="10"/> 
+        <rect fill="yellow"
+              x="10" y="0"   width="10" height="10"/> 
+        <rect fill="yellow"
+              x="0"  y="10"  width="10" height="10"/> 
+        <rect fill="blue"
+              x="10" y="10"  width="10" height="10"/> 
+     </pattern>
+      
+     <rect id="checkerRect1"
+           x="0" y="0" width="200" height="100"/>
+
+     <rect id="checkerRect2"
+           x="0" y="0" width="200" height="240"/>
+  </defs>
+
+<g width="100%" height="100%"> 
+   <use xlink:href="#checkerRect2"  x="50" y="40"
+             fill="url(#checkerPattern2)"
+             filter="url(#glossyFilter1)"/>
+</g>
+</svg>
+

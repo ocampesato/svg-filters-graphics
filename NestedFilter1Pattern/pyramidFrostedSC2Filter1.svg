@@ -1,0 +1,210 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN" 
+  "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+
+<svg width="100%" height="100%" onload="init(evt)"
+     xmlns:xlink="http://www.w3.org/1999/xlink" 
+     xmlns="http://www.w3.org/2000/svg">
+
+  <script type="text/ecmascript"> 
+    <![CDATA[
+     var basePointX       = 50;
+     var basePointY       = 20;
+     var currentX         = 0.0;
+     var currentY         = 0.0;
+     var deltaY           = 5;
+     var pGonHeight       = 50;
+     var pGonWidth        = 240;
+     var pVertexCount     = 3;
+     var pGonXPts         = Array(pVertexCount);
+     var pGonYPts         = Array(pVertexCount);
+     var fixedFrontHeight = 240;
+     var frontHeight      = fixedFrontHeight;
+     var factor           = 5;
+     var stripCount       = 12;
+     var stripHeight      = Math.floor((frontHeight-pGonHeight)/
+                             (factor*stripCount));
+     var index            = 0;
+     var opacity          = 0.3;
+     var style            = "";
+     var fillColors       = ["red","green","blue","black"];
+     var dashStyles       = ["2 2 2 2","1 1 1 1","4 4 4 4"];
+     var dashStyleCount   = 3;
+     var strokeWidth      = 2;
+     var strokeColor      = "white";
+ 
+     var pGonNode         = null;
+     var svgDocument      = null;
+     var gcNode           = null;
+     var svgNS            = "http://www.w3.org/2000/svg";
+ 
+     function init(evt) {
+        svgDocument = evt.target.ownerDocument; 
+        gcNode = svgDocument.getElementById("gc")
+
+        drawPyramid();
+     }
+
+     function drawPyramid() {
+        for(var s=0; s<stripCount; s++) {
+           frontHeight = fixedFrontHeight-
+                             factor*s*stripHeight/2; 
+
+           drawTopFace();
+           drawLeftFace();
+           drawRightFace();
+        }
+     }
+
+     function drawTopFace() {
+        // clockwise from left-most vertex...
+        pGonXPts[0] = basePointX;
+        pGonYPts[0] = basePointY;
+
+        pGonXPts[1] = basePointX+pGonWidth;
+        pGonYPts[1] = basePointY;
+
+        pGonXPts[2] = basePointX+pGonWidth/2;
+        pGonYPts[2] = basePointY+frontHeight-pGonHeight;
+
+        points = "";
+        for(var v=0; v<pVertexCount; v++) {
+           points += pGonXPts[v]+","+pGonYPts[v]+" ";
+        }
+
+        index = frontHeight%dashStyleCount;
+
+      //style = "fill:"+fillColors[0];
+        style = "fill:url(#radialGradient2)";
+        style += ";stroke:"+strokeColor;
+        style += ";stroke-dasharray:"+dashStyles[index];
+        style += ";stroke-width:"+strokeWidth;
+  
+        pGonNode = svgDocument.createElementNS(svgNS, "polygon");
+        pGonNode.setAttribute("style", style);
+        pGonNode.setAttribute("opacity", opacity);
+        pGonNode.setAttribute("points", points);
+        gcNode.appendChild(pGonNode);
+     }
+
+     function drawLeftFace() {
+        // clockwise from left-most vertex...
+        pGonXPts[0] = basePointX;
+        pGonYPts[0] = basePointY;
+
+        pGonXPts[1] = basePointX+pGonWidth/2;
+        pGonYPts[1] = basePointY+pGonHeight;
+
+        pGonXPts[2] = basePointX+pGonWidth/2;
+        pGonYPts[2] = basePointY+frontHeight;
+
+        points = "";
+        for(var v=0; v<pVertexCount; v++) {
+           points += pGonXPts[v]+","+pGonYPts[v]+" ";
+        }
+
+        index = (frontHeight+1)%dashStyleCount;
+
+      //style = "fill:"+fillColors[1];
+        style = "fill:url(#radialGradient1)";
+        style += ";stroke:"+strokeColor;
+        style += ";stroke-dasharray:"+dashStyles[index];
+        style += ";stroke-width:"+strokeWidth;
+  
+        pGonNode = svgDocument.createElementNS(svgNS, "polygon");
+        pGonNode.setAttribute("style", style);
+        pGonNode.setAttribute("opacity", opacity);
+        pGonNode.setAttribute("points", points);
+        gcNode.appendChild(pGonNode);
+     } // drawPyramid
+
+     function drawRightFace() {
+        // clockwise from left-most vertex...
+        pGonXPts[0] = basePointX+pGonWidth/2;
+        pGonYPts[0] = basePointY+pGonHeight;
+
+        pGonXPts[0] = basePointX+pGonWidth;
+        pGonYPts[0] = basePointY;
+
+        pGonXPts[2] = basePointX+pGonWidth/2;
+        pGonYPts[2] = basePointY+frontHeight;
+
+        points = "";
+        for(var v=0; v<pVertexCount; v++) {
+           points += pGonXPts[v]+","+pGonYPts[v]+" ";
+        }
+
+        index = (frontHeight+2)%dashStyleCount;
+      //style = "fill:"+fillColors[2];
+        style = "fill:url(#circle3DEffect1)";
+        style += ";stroke:"+strokeColor;
+        style += ";stroke-dasharray:"+dashStyles[index];
+        style += ";stroke-width:"+strokeWidth;
+  
+        pGonNode = svgDocument.createElementNS(svgNS, "polygon");
+        pGonNode.setAttribute("style", style);
+        pGonNode.setAttribute("opacity", opacity);
+        pGonNode.setAttribute("points", points);
+        gcNode.appendChild(pGonNode);
+     }
+  ]]> </script>
+
+<!-- ============================ -->
+<defs>
+  <filter id="turbFilter4" in="SourceImage" 
+           filterUnits="objectBoundingBox">
+      <feTurbulence baseFrequency="0.05" numOctaves="3" 
+                    result="turbulenceOut1"/> 
+        <feDisplacementMap in="SourceGraphic" in2="turbulenceOut1" 
+                           xChannelSelector="B" yChannelSelector="B"
+                           scale="20"/> 
+   </filter>
+
+   <radialGradient id="circle3DEffect1" 
+                   gradientUnits="objectBoundingBox"
+                   fx="30%" fy="30%">
+     <stop offset="0%"   style="stop-color:#660000"/>
+     <stop offset="40%"  style="stop-color:#AA0000"/>
+     <stop offset="100%" style="stop-color:#FFFFFF"/>
+   </radialGradient>
+    
+   <radialGradient id="circle3DEffect2" 
+                   gradientUnits="objectBoundingBox"
+                   fx="30%" fy="30%">
+     <stop offset="0%"   style="stop-color:#000066"/>
+     <stop offset="40%"  style="stop-color:#0000AA"/>
+     <stop offset="100%" style="stop-color:#FFFFFF"/>
+   </radialGradient>
+
+   <circle id="3DCircle" cx="0" cy="0" r="40" 
+           style="fill:url(#circle3DEffect1)" />
+
+   <radialGradient id="radialGradient1" 
+                   gradientUnits="userSpaceOnUse"
+                   cx="400" cy="200" r="300" 
+                   fx="400" fy="200">
+     <stop offset="0%"   stop-color="red"/>
+     <stop offset="33%"  stop-color="blue"/>
+     <stop offset="67%"  stop-color="red"/>
+     <stop offset="100%" stop-color="blue"/>
+   </radialGradient>
+ 
+   <radialGradient id="radialGradient2" 
+                   gradientUnits="userSpaceOnUse"
+                   cx="400" cy="200" r="300" 
+                   fx="400" fy="200">
+     <stop offset="0%"   stop-color="yellow"/>
+     <stop offset="33%"  stop-color="blue"/>
+     <stop offset="67%"  stop-color="yellow"/>
+     <stop offset="100%" stop-color="blue"/>
+   </radialGradient>
+</defs>
+
+<g id="gc" transform="translate(20,20)"
+   filter="url(#turbFilter4)">  
+  <rect x="0" y="0" 
+        width="800" height="500" 
+        fill="none" stroke="none"/>
+</g>
+</svg>
+

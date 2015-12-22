@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN" 
+  "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+
+<svg width="100%" height="100%"
+     xmlns:xlink="http://www.w3.org/1999/xlink" 
+     xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <filter id="turbFilter4" in="SourceImage" 
+           filterUnits="objectBoundingBox">
+      <feTurbulence baseFrequency="0.05" numOctaves="0" 
+                    result="turbulenceOut1"/> 
+        <feDisplacementMap in="SourceGraphic" in2="turbulenceOut1" 
+                           xChannelSelector="B" yChannelSelector="B"
+                           scale="20"/> 
+   </filter>
+
+  <radialGradient id="blueCircle" 
+                  gradientUnits="objectBoundingBox"
+                  fx="70%" fy="70%">
+    <stop offset="0%"   style="stop-color:#FFFFFF"/>
+    <stop offset="40%"  style="stop-color:#0000AA"/>
+    <stop offset="100%" style="stop-color:#000066"/>
+  </radialGradient>
+
+  <g id="boxShape">
+    <path id="frontFace"
+          d="m0,0 100,0 0,80 -100,0"
+          fill="red"/> 
+
+    <path id="topFace"
+          d="m0,0 l100,0 60,-30 -100,0"
+          fill="green"/> 
+
+    <path id="rightFace"
+          d="m100,0 l60,-30 0,80 -60,30"
+          fill="black"/> 
+  </g>
+
+  <path id="ellipticArc1"
+        d="m50,0 a150,150 0 0,1 70,-10
+                 a150,150 0 0,1 -20,80
+                 a150,150 0 0,1 -50,-70"
+        fill="url(#blueCircle)"/> 
+
+  <path id="ellipticArc2"
+        d="m90,0 a150,150 0 0,1 50,-20
+                 a150,150 0 0,1 -40,60
+                 a150,150 0 0,1 -10,-40"
+        fill="url(#blueCircle)"/> 
+
+  <path id="ellipticArc3"
+        d="m30,0 a150,150 0 0,1 80,-5
+                 a150,150 0 0,1 -10,30
+                 a150,150 0 0,1 -70,-25"
+        fill="url(#blueCircle)"/> 
+</defs>
+
+<g id="gc" transform="translate(20,100) scale(2,2)"
+   filter="url(#turbFilter4)">   
+  <use xlink:href="#boxShape"     x="0" y="0"/>
+  <use xlink:href="#ellipticArc3" x="0" y="0"/>
+  <use xlink:href="#ellipticArc2" x="0" y="0"/>
+  <use xlink:href="#ellipticArc1" x="0" y="0"/>
+</g>
+</svg>
+

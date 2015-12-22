@@ -1,0 +1,258 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN" 
+  "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+
+<svg width="100%" height="100%" onload="init(evt)"
+     xmlns="http://www.w3.org/2000/svg">
+
+  <script type="text/ecmascript"> 
+    <![CDATA[
+
+    var width         = 800;
+    var height        = 500;
+    var basePointX    = 350;
+    var basePointY    = 220;
+    var currentX      = 0;
+    var currentY      = 0;
+    var offsetX       = 0;
+    var offsetY       = 0;
+    var radius        = 0;
+    var minorAxis     = 20;
+    var majorAxis     = 40;
+    var Constant      = 15000;
+    var angle         = 0;
+    var maxAngle      = 360;
+    var angleDelta    = 3;
+    var shortPause    = 10;
+    var strokeWidth   = 2;
+    var style         = "";
+    var rVal          = 0;
+    var gVal          = 0;
+    var bVal          = 0;
+ 
+    var ellipseNode   = null;
+    var polygonNode   = null;
+    var rectNode      = null;
+    var svgDocument   = null;
+    var gcNode        = null;
+    var svgNS         = "http://www.w3.org/2000/svg";
+
+    function init(evt) {
+       svgDocument = evt.target.ownerDocument; 
+       gcNode = svgDocument.getElementById("gc")
+
+       drawSpiral();
+    }
+
+    function drawSpiral() {
+       for(angle=0; angle<maxAngle; angle+=angleDelta) {
+          radius = Constant*
+                    Math.sin(angle*Math.PI/180)/(angle+1);
+  
+          offsetX = radius*Math.cos(angle*Math.PI/180);
+          offsetY = radius*Math.sin(angle*Math.PI/180);
+
+          currentX = basePointX+offsetX;
+          currentY = basePointY-offsetY;
+  
+          rVal = angle*255/maxAngle;
+          gVal = 0;
+          bVal = 0;
+
+          addEllipse(currentX, currentY, angle);
+
+          currentX = basePointX+offsetX;
+          currentY = basePointY+offsetY;
+          addEllipse(currentX, currentY);
+
+          currentX = basePointX-offsetX;
+          currentY = basePointY-offsetY;
+
+          rVal = (maxAngle-angle)*255/maxAngle;
+          gVal = 0;
+          bVal = 0;
+
+          addEllipse(currentX, currentY, angle);
+
+          currentX = basePointX-offsetX;
+          currentY = basePointY+offsetY;
+          addEllipse(currentX, currentY);
+       }
+    } // drawSpiral
+
+    function addWatch() {
+       // add watch face...
+       rectNode = svgDocument.createElementNS(svgNS, "rect");
+       rectNode.setAttribute("x",     currentX);
+       rectNode.setAttribute("y",     currentY);
+       rectNode.setAttribute("width", 80);
+       rectNode.setAttribute("height",80);
+       rectNode.setAttribute("style",
+                   "fill:url(#blueCircle);stroke:yellow");
+       gcNode.appendChild(rectNode);
+
+       // add four time dots...
+       ellipseNode = document.createElementNS(svgNS, "ellipse");
+       ellipseNode.setAttribute("style","fill:url(#redCircle)");
+       ellipseNode.setAttribute("cx", currentX+40);
+       ellipseNode.setAttribute("cy", currentY+10);
+       ellipseNode.setAttribute("rx", 6);
+       ellipseNode.setAttribute("ry", 6);
+       gcNode.appendChild(ellipseNode);
+
+       ellipseNode = document.createElementNS(svgNS, "ellipse");
+       ellipseNode.setAttribute("style","fill:url(#redCircle)");
+       ellipseNode.setAttribute("cx", currentX+70);
+       ellipseNode.setAttribute("cy", currentY+40);
+       ellipseNode.setAttribute("rx", 6);
+       ellipseNode.setAttribute("ry", 6);
+       gcNode.appendChild(ellipseNode);
+
+       ellipseNode = document.createElementNS(svgNS, "ellipse");
+       ellipseNode.setAttribute("style","fill:url(#redCircle)");
+       ellipseNode.setAttribute("cx", currentX+40);
+       ellipseNode.setAttribute("cy", currentY+70);
+       ellipseNode.setAttribute("rx", 6);
+       ellipseNode.setAttribute("ry", 6);
+       gcNode.appendChild(ellipseNode);
+
+       ellipseNode = document.createElementNS(svgNS, "ellipse");
+       ellipseNode.setAttribute("style","fill:url(#redCircle)");
+       ellipseNode.setAttribute("cx", currentX+10);
+       ellipseNode.setAttribute("cy", currentY+40);
+       ellipseNode.setAttribute("rx", 6);
+       ellipseNode.setAttribute("ry", 6);
+       gcNode.appendChild(ellipseNode);
+
+       // add hour hand...
+       points  = (currentX+40)+","+(currentY+40)+" ";
+       points += (currentX+55)+","+(currentY+44)+" ";
+       points += (currentX+60)+","+(currentY+40)+" ";
+       points += (currentX+55)+","+(currentY+36)+" ";
+       points += (currentX+40)+","+(currentY+40)+" ";
+
+       polygonNode = svgDocument.createElementNS(svgNS, "polygon");
+       polygonNode.setAttribute("style","fill:white");
+       polygonNode.setAttribute("points", points);
+       gcNode.appendChild(polygonNode);
+
+       // add minute hand...
+       points  = (currentX+40)+","+(currentY+40)+" ";
+       points += (currentX+42)+","+(currentY+15)+" ";
+       points += (currentX+40)+","+(currentY+10)+" ";
+       points += (currentX+38)+","+(currentY+15)+" ";
+       points += (currentX+40)+","+(currentY+40)+" ";
+
+       polygonNode = svgDocument.createElementNS(svgNS, "polygon");
+       polygonNode.setAttribute("style","fill:white");
+       polygonNode.setAttribute("points", points);
+       gcNode.appendChild(polygonNode);
+    }
+
+    function addEllipse(currentX, currentY, pattern) {
+       fillColor = "rgb("+rVal+","+gVal+","+bVal+")";
+       strokeColor = "rgb("+rVal+","+gVal+","+bVal+")";
+
+       if( pattern % 2 == 1 ) {
+          style  = "fill:url(#checkerPattern1)";
+          style += ";stroke:red";
+          style += ";stroke-width:"+strokeWidth;
+       } else {
+          style  = "fill:url(#checkerPattern2)";
+          style += ";stroke:red";
+          style += ";stroke-width:"+strokeWidth;
+       }
+
+       ellipseNode = document.createElementNS(svgNS, "ellipse");
+       ellipseNode.setAttribute("style",style);
+       ellipseNode.setAttribute("cx", currentX);
+       ellipseNode.setAttribute("cy", currentY);
+       ellipseNode.setAttribute("rx", majorAxis);
+       ellipseNode.setAttribute("ry", minorAxis);
+       gcNode.appendChild(ellipseNode);
+
+       addWatch();
+    }
+  ]]> </script>
+
+<!-- ============================ -->
+<defs>
+  <filter id="turbFilter4" in="SourceImage" 
+           filterUnits="objectBoundingBox">
+      <feTurbulence baseFrequency="0.05" numOctaves="0" 
+                    result="turbulenceOut1"/> 
+        <feDisplacementMap in="SourceGraphic" in2="turbulenceOut1" 
+                           xChannelSelector="B" yChannelSelector="B"
+                           scale="20"/> 
+   </filter>
+
+  <radialGradient id="yellowCircle" 
+                  gradientUnits="objectBoundingBox"
+                  fx="70%" fy="70%">
+   
+    <stop offset="0%"   style="stop-color:#FFFFFF"/>
+    <stop offset="40%"  style="stop-color:#AAAA00"/>
+    <stop offset="100%" style="stop-color:#666600"/>
+  </radialGradient>
+ 
+  <radialGradient id="redCircle" 
+                  gradientUnits="objectBoundingBox"
+                  fx="70%" fy="70%">
+   
+    <stop offset="0%"   style="stop-color:#FFFFFF"/>
+    <stop offset="40%"  style="stop-color:#AA0000"/>
+    <stop offset="100%" style="stop-color:#660000"/>
+  </radialGradient>
+
+  <radialGradient id="blueCircle" 
+                  gradientUnits="objectBoundingBox"
+                  fx="70%" fy="70%">
+   
+    <stop offset="0%"   style="stop-color:#FFFFFF"/>
+    <stop offset="40%"  style="stop-color:#0000AA"/>
+    <stop offset="100%" style="stop-color:#000066"/>
+  </radialGradient>
+ 
+  <pattern id="checkerPattern1" 
+           width="80" height="80"
+           patternUnits="userSpaceOnUse">
+
+     <rect fill="red"
+           x="0"  y="0"  width="40" height="40"/> 
+
+     <rect fill="blue"
+           x="40" y="0"  width="40" height="40"/> 
+
+     <rect fill="blue"
+           x="0"  y="40" width="40" height="40"/> 
+
+     <rect fill="red"
+           x="40" y="40" width="40" height="40"/> 
+  </pattern>
+
+  <pattern id="checkerPattern2" 
+           width="80" height="80"
+           patternUnits="userSpaceOnUse">
+
+     <rect fill="yellow"
+           x="0"  y="0"  width="40" height="40"/> 
+
+     <rect fill="green"
+           x="40" y="0"  width="40" height="40"/> 
+
+     <rect fill="green"
+           x="0"  y="40" width="40" height="40"/> 
+
+     <rect fill="yellow"
+           x="40" y="40" width="40" height="40"/> 
+  </pattern>
+  </defs>
+
+<g id="gc" transform="translate(10,10)" 
+   filter="url(#turbFilter4)">   
+  <rect x="0" y="0" 
+        width="800" height="500" 
+        fill="none" stroke="none"/>
+</g>
+</svg>
+

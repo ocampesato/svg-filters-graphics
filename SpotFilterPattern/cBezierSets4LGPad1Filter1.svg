@@ -1,0 +1,103 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN" 
+  "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+
+<svg width="100%" height="100%" onload="init(evt)"
+     xmlns:xlink="http://www.w3.org/1999/xlink" 
+     xmlns="http://www.w3.org/2000/svg">
+
+  <script type="text/ecmascript"> 
+    <![CDATA[
+    var basePointX    = 150;
+    var basePointY    = 200;
+    var cWidth        = 300;
+    var cHeight       = 300;
+    var currY         = 0;
+    var strokeWidth   = 1;
+    var strokeColor   = "yellow";
+    var pathPoints    = "";
+    var style         = "";
+    var pGap          = 20;
+    var rVal          = 0;
+    var gVal          = 0;
+    var bVal          = 0;
+ 
+    var pathNode      = null;
+    var svgDocument   = null;
+    var gcNode        = null;
+    var svgNS         = "http://www.w3.org/2000/svg";
+
+    function init(evt) {
+       svgDocument = evt.target.ownerDocument; 
+       gcNode = svgDocument.getElementById("gc")
+
+       initializeBezier();
+       parameterizeBezier();
+       renderBezier();
+    }
+
+    function drawPath() {
+       for(currY=0; currY<cHeight; currY++) {
+          rVal   = currY*255/cHeight;
+
+          if( currY % pGap == 0 ) {
+             style  = "fill:rgb("+rVal+","+gVal+","+bVal+")";
+             style += ";stroke-width:"+strokeWidth;
+             style += ";stroke:"+strokeColor;
+          } else {
+             style  = "fill:url(#linearGradient2)";
+             style += ";stroke-width:"+strokeWidth;
+          }
+
+          pathPoints  = "";
+          pathPoints += "M200,"+currY+" ";
+          pathPoints += "C0,0 ";
+          pathPoints += "400,170 ";
+          pathPoints += "20,"+(40+currY);
+
+          pathNode = svgDocument.createElementNS(svgNS, "path");
+          pathNode.setAttribute("style",style);
+          pathNode.setAttribute("d", pathPoints);
+          gcNode.appendChild(pathNode);
+       }
+    }
+  ]]> </script>
+ 
+<!-- ============================ -->
+<defs>
+  <filter id="turbFilter4" in="SourceImage" 
+           filterUnits="objectBoundingBox">
+      <feTurbulence baseFrequency="0.25" numOctaves="1" 
+                    result="turbulenceOut1"/> 
+      <feDisplacementMap in="SourceGraphic" in2="turbulenceOut1" 
+                         xChannelSelector="B" yChannelSelector="R"
+                         scale="2"/> 
+
+      <feDiffuseLighting in="SourceGraphic" 
+                         diffuseConstant="1" 
+                         surfaceScale="10" 
+                         style="lighting-color:#FFFFCC;">
+         <feSpotLight x="30" y="10" z="80" 
+                      pointsAtX="30" pointsAtY="30" pointsAtZ="20" 
+                      specularExponent="1"/>
+     </feDiffuseLighting>
+   </filter>
+
+   <linearGradient gradientUnits="objectBoundingBox" 
+                   id="linearGradient2" 
+                   spreadMethod="pad" 
+                   x1="0.45" y1="0.45" x2="0.55" y2="0.55">
+      <stop offset="0"  style="stop-color:yellow"/>
+      <stop offset=".5" style="stop-color:blue"/>
+      <stop offset="1"  style="stop-color:red"/>
+   </linearGradient>
+</defs>
+
+<g id="gc" transform="translate(10,10)" 
+   filter="url(#turbFilter4)">  
+  <rect x="0" y="0" 
+        width="800" height="500" 
+        fill="none" stroke="none"/>
+</g>
+</svg>
+

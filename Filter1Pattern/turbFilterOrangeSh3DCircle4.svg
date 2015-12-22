@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
+ "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+
+<svg xmlns="http://www.w3.org/2000/svg" 
+     xmlns:xlink="http://www.w3.org/1999/xlink" 
+     width="100%" height="100%"> 
+
+<defs>
+   <filter id="turbFilter1" in="SourceImage" 
+           filterUnits="objectBoundingBox">
+      <feTurbulence baseFrequency="0.05" numOctaves="1" 
+                    result="turbulenceOut1"/> 
+    <feDisplacementMap in="SourceGraphic" in2="turbulenceOut1" 
+                       xChannelSelector="R" yChannelSelector="G"
+                       scale="10"/> 
+   </filter>
+
+   <filter id="turbFilter2" in="SourceImage" 
+           filterUnits="objectBoundingBox">
+      <feTurbulence baseFrequency="0.05" numOctaves="5" 
+                    result="turbulenceOut1"/> 
+        <feDisplacementMap in="SourceGraphic" in2="turbulenceOut1" 
+                           xChannelSelector="A" yChannelSelector="B"
+                           scale="50"/> 
+   </filter>
+
+   <filter id="turbFilter3" in="SourceImage" 
+           filterUnits="objectBoundingBox">
+      <feTurbulence baseFrequency="0.05" numOctaves="5" 
+                    result="turbulenceOut1"/> 
+        <feDisplacementMap in="SourceGraphic" in2="turbulenceOut1" 
+                           xChannelSelector="A" yChannelSelector="B"
+                           scale="500"/> 
+   </filter>
+
+   <filter id="turbFilter4" in="SourceImage" 
+           filterUnits="objectBoundingBox">
+      <feTurbulence baseFrequency="0.25" numOctaves="2" 
+                    result="turbulenceOut1"/> 
+        <feDisplacementMap in="SourceGraphic" in2="turbulenceOut1" 
+                           xChannelSelector="B" yChannelSelector="B"
+                           scale="100"/> 
+   </filter>
+
+   <filter id="turbFilter5" in="SourceImage" 
+           filterUnits="objectBoundingBox">
+      <feTurbulence baseFrequency="0.01" numOctaves="0" 
+                    result="turbulenceOut1"/> 
+        <feDisplacementMap in="SourceGraphic" in2="turbulenceOut1" 
+                           xChannelSelector="B" yChannelSelector="B"
+                           scale="100"/> 
+   </filter>
+
+   <filter id="turbFilter6" in="SourceImage" 
+           filterUnits="objectBoundingBox">
+      <feTurbulence baseFrequency="0.45" numOctaves="2" 
+                    result="turbulenceOut1"/> 
+        <feDisplacementMap in="SourceGraphic" in2="turbulenceOut1" 
+                           xChannelSelector="B" yChannelSelector="G"
+                           scale="100"/> 
+   </filter>
+
+   <radialGradient id="blueCircle" 
+                   gradientUnits="objectBoundingBox"
+                   fx="30%" fy="30%">
+     <stop offset="0%"   style="stop-color:#FFFFFF"/>
+     <stop offset="40%"  style="stop-color:#0000AA"/>
+     <stop offset="100%" style="stop-color:#000066"/>
+   </radialGradient>
+    
+   <radialGradient id="orangeCircle" 
+                   gradientUnits="objectBoundingBox"
+                   fx="30%" fy="30%">
+     <stop offset="0%"   style="stop-color:#FFFFFF"/>
+     <stop offset="40%"  style="stop-color:#FFC800"/>
+     <stop offset="100%" style="stop-color:#666600"/>
+   </radialGradient>
+    
+   <circle id="3DBlueCircle" cx="0" cy="0" r="100" 
+           style="fill:url(#blueCircle)"/>
+    
+   <circle id="3DOrangeCircle" cx="0" cy="0" r="100" 
+           style="fill:url(#orangeCircle)"/>
+    
+   <circle id="3DShadowCircle" cx="10" cy="10" r="100" 
+           style="fill:black"/>
+</defs>
+
+<g transform="scale(.8,.8)">
+<g transform="translate(10,0)" width="100%" height="100%"> 
+   <use xlink:href="#3DShadowCircle" x="130" y="110"/>
+   <use xlink:href="#3DOrangeCircle" x="120" y="120"
+        filter="url(#turbFilter1)"/>
+</g>
+
+<g transform="translate(250,0)" width="100%" height="100%"> 
+   <use xlink:href="#3DShadowCircle" x="130" y="100"
+        filter="url(#turbFilter2)"/>
+   <use xlink:href="#3DOrangeCircle" x="120" y="120"
+        filter="url(#turbFilter2)"/>
+</g>
+
+<g transform="translate(480,0)" width="100%" height="100%"> 
+   <use xlink:href="#3DShadowCircle" x="130" y="110"
+        filter="url(#turbFilter3)"/>
+   <use xlink:href="#3DOrangeCircle" x="120" y="120"
+        filter="url(#turbFilter3)"/>
+</g>
+
+<g transform="translate(10,220)" width="100%" height="100%"> 
+   <use xlink:href="#3DShadowCircle" x="130" y="100"
+        filter="url(#turbFilter4)"/>
+   <use xlink:href="#3DOrangeCircle" x="120" y="120"
+        filter="url(#turbFilter4)"/>
+</g>
+
+<g transform="translate(250,220)" width="100%" height="100%"> 
+   <use xlink:href="#3DShadowCircle" x="130" y="100"
+        filter="url(#turbFilter5)"/>
+   <use xlink:href="#3DOrangeCircle" x="120" y="120"
+        filter="url(#turbFilter5)"/>
+</g>
+
+<g transform="translate(480,220)" width="100%" height="100%"> 
+   <use xlink:href="#3DShadowCircle" x="130" y="100"
+        filter="url(#turbFilter6)"/>
+   <use xlink:href="#3DOrangeCircle" x="120" y="120"
+        filter="url(#turbFilter6)"/>
+</g>
+</g>
+</svg>

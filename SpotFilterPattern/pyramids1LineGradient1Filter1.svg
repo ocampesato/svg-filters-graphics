@@ -1,0 +1,224 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN" 
+  "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+
+<svg width="100%" height="100%" onload="init(evt)"
+     xmlns="http://www.w3.org/2000/svg">
+
+  <script type="text/ecmascript"> 
+    <![CDATA[
+    var basePointX      = 0;
+    var basePointY      = 200;
+    var currentX        = 0;
+    var currentY        = 0;
+    var pGramWidth      = 400;
+    var slantLength     = 240;
+    var slantAngle      = 30;
+    var slantX          = 0;
+    var slantY          = 0;
+    var rowCount        = 4;
+    var colCount        = 4;
+    var cellWidth       = pGramWidth/colCount;
+    var cellSlantHeight = slantLength/rowCount;
+    var offsetX         = 0;
+    var offsetY         = 0;
+    var centerX         = 0;
+    var centerY         = 0;
+    var pyramidHeight   = 50;
+    var vertexCount     = 3;
+    var triangleXPts    = Array(vertexCount);
+    var triangleYPts    = Array(vertexCount);
+    var pGramXPts       = Array(vertexCount);
+    var pGramYPts       = Array(vertexCount);
+
+    var fromX           = 0;
+    var fromY           = 0;
+    var destX           = 0;
+    var destY           = 0;
+
+    var strokeWidth     = 1;
+    var strokeColors    = ['red','green', 'blue','yellow'];
+    var style           = "";
+    var points          = "";
+    var rVal            = 0;
+    var gVal            = 0;
+    var bVal            = 0;
+ 
+    var svgDocument     = null;
+    var triangleNode    = null;
+    var pGramNode       = null;
+    var lineNode        = null;
+    var gcNode          = null;
+    var svgNS           = "http://www.w3.org/2000/svg";
+
+    function init(evt) {
+       slantX = slantLength*Math.cos(
+                      slantAngle*Math.PI/180);
+
+       slantY = slantLength*Math.sin(
+                      slantAngle*Math.PI/180);
+
+       svgDocument = evt.target.ownerDocument; 
+       gcNode = svgDocument.getElementById("gc")
+
+       drawSpiral();
+    }
+
+    function drawBaseParallelogram() {
+       // draw base parallelogram; points rendered
+       // counter clockwise from lower-left vertex
+       points  = basePointX+","+basePointY+" ";
+
+       points += (basePointX+pGramWidth)+","+
+                  basePointY+" ";
+
+       points += (basePointX+pGramWidth+slantX)+","+
+                 (basePointY-slantY)+" ";
+
+       points += (basePointX+slantX)+","+
+                 (basePointY-slantY)+" ";
+
+       style = "fill:none;stroke:"+strokeColors[0];
+
+       pGramNode = svgDocument.createElementNS(svgNS, "polygon");
+       pGramNode.setAttribute("style",style);
+       pGramNode.setAttribute("points", points);
+       gcNode.appendChild(pGramNode);
+
+    } // drawBaseParallelogram
+
+    function drawPyramids() {
+       drawBaseParallelogram();
+
+       offsetX = slantX/colCount;
+       offsetY = slantY/rowCount;
+
+       for(var row=0; row<rowCount; row++) {
+          for(var col=0; col<colCount; col++) {
+             currentX = basePointX+row*offsetX+cellWidth*col;
+             currentY = basePointY-slantY*row/rowCount;
+
+             pGramXPts[0] = currentX;
+             pGramYPts[0] = currentY;
+
+             pGramXPts[1] = currentX+cellWidth;
+             pGramYPts[1] = currentY;
+
+             pGramXPts[2] = currentX+cellWidth+offsetX;
+             pGramYPts[2] = currentY-offsetY;
+
+             pGramXPts[3] = currentX+offsetX;
+             pGramYPts[3] = currentY-offsetY;
+
+             centerX = (pGramXPts[0]+pGramXPts[2])/2;
+             centerY = (pGramYPts[0]+pGramYPts[2])/2;
+
+             // left triangle...
+             points  = pGramXPts[0]+","+pGramYPts[0]+" ";
+             points += pGramXPts[3]+","+pGramYPts[3]+" ";
+             points += centerX+","+(centerY-pyramidHeight);
+
+             style = "fill:none;stroke:"+strokeColors[0];
+             triangleNode = svgDocument.createElementNS(svgNS, "polygon");
+             triangleNode.setAttribute("style",style);
+             triangleNode.setAttribute("points", points);
+             gcNode.appendChild(triangleNode);
+
+             // rear triangle...
+             points  = pGramXPts[2]+","+pGramYPts[2]+" ";
+             points += pGramXPts[3]+","+pGramYPts[3]+" ";
+             points += centerX+","+(centerY-pyramidHeight);
+
+             style = "fill:none;stroke:"+strokeColors[1];
+
+             triangleNode = svgDocument.createElementNS(svgNS, "polygon");
+             triangleNode.setAttribute("style",style);
+             triangleNode.setAttribute("points", points);
+             gcNode.appendChild(triangleNode);
+
+             // right triangle...
+             points  = pGramXPts[1]+","+pGramYPts[1]+" ";
+             points += pGramXPts[2]+","+pGramYPts[2]+" ";
+             points += centerX+","+(centerY-pyramidHeight);
+
+             style = "fill:none;stroke:"+strokeColors[2];
+
+             triangleNode = svgDocument.createElementNS(svgNS, "polygon");
+             triangleNode.setAttribute("style",style);
+             triangleNode.setAttribute("points", points);
+             gcNode.appendChild(triangleNode);
+
+/*
+             // front triangle...
+             points  = pGramXPts[0]+","+pGramYPts[0]+" ";
+             points += pGramXPts[1]+","+pGramYPts[1]+" ";
+             points += centerX+","+(centerY-pyramidHeight);
+
+             triangleNode = 
+                    svgDocument.createElement("polygon");
+    
+             style = "fill:none;stroke:"+strokeColors[3];
+             triangleNode.setAttribute("style",style);
+             triangleNode.setAttribute("points", points);
+   
+             gcNode.appendChild(triangleNode);
+*/
+
+             points += pGramXPts[1]+","+pGramYPts[1]+" ";
+             points += centerX+","+(centerY-pyramidHeight);
+
+             for(var x=0; x<cellWidth; x++) {
+                fromX = centerX;
+                fromY = centerY-pyramidHeight;
+
+                destX = pGramXPts[0]+x;
+                destY = pGramYPts[0];
+
+                rVal = x*255/cellWidth;
+                gVal = 0;
+                bVal = 0;
+
+                style = "fill:rgb("+rVal+","+ gVal+","+bVal+")";
+
+                lineNode = svgDocument.createElementNS(svgNS, "line");
+                lineNode.setAttribute("style",style);
+                lineNode.setAttribute("x1", fromX);
+                lineNode.setAttribute("y1", fromY);
+                lineNode.setAttribute("x2", destX);
+                lineNode.setAttribute("y2", destY);
+                gcNode.appendChild(lineNode);
+             }
+          }
+       }
+    } // drawSpiral
+  ]]> </script>
+
+<!-- ============================ -->
+<defs>
+  <filter id="turbFilter4" in="SourceImage" 
+           filterUnits="objectBoundingBox">
+      <feTurbulence baseFrequency="0.15" numOctaves="1" 
+                    result="turbulenceOut1"/> 
+        <feDisplacementMap in="SourceGraphic" in2="turbulenceOut1" 
+                           xChannelSelector="B" yChannelSelector="B"
+                           scale="1"/> 
+
+      <feDiffuseLighting in="SourceGraphic" 
+                         diffuseConstant="2" 
+                         surfaceScale="20" 
+                         style="lighting-color:#FFFFCC;">
+         <feSpotLight x="30" y="10" z="80" 
+                      pointsAtX="30" pointsAtY="30" pointsAtZ="0" 
+                      specularExponent="1"/>
+     </feDiffuseLighting>
+   </filter>
+</defs>
+
+<g id="gc" transform="translate(10,10)" 
+   filter="url(#turbFilter4)">  
+  <rect x="0" y="0" 
+        width="800" height="500" 
+        fill="none" stroke="none"/>
+</g>
+</svg>
+

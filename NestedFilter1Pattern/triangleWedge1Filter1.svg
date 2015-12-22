@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20001102//EN" 
+ "http://www.w3.org/TR/2000/CR-SVG-20001102/DTD/svg-20001102.dtd"> 
+
+<svg width="100%" height="100%" 
+     xmlns:xlink="http://www.w3.org/1999/xlink" 
+     xmlns="http://www.w3.org/2000/svg">
+
+<!-- ============================ -->
+<defs>
+  <filter id="turbFilter4" in="SourceImage" 
+           filterUnits="objectBoundingBox">
+      <feTurbulence baseFrequency="0.05" numOctaves="3" 
+                    result="turbulenceOut1"/> 
+        <feDisplacementMap in="SourceGraphic" in2="turbulenceOut1" 
+                           xChannelSelector="B" yChannelSelector="B"
+                           scale="30"/> 
+   </filter>
+</defs>
+
+<g id="gc" transform="translate(20,80)"
+   filter="url(#turbFilter4)">  
+  <!-- render triangle -->
+  <polygon
+    points="200,0 300,150 100,150"
+    stroke-dasharray="4 4 4 4" stroke-width="4"
+    style="fill:red;stroke:blue;"/>
+
+  <!-- render parallelogram (clockwise) -->
+  <polygon
+    points="200,0 100,150 50,120 150,-30"
+    style="fill:black;stroke:blue;"/>
+</g>
+</svg>
+

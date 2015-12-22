@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20001102//EN" 
+ "http://www.w3.org/TR/2000/CR-SVG-20001102/DTD/svg-20001102.dtd"> 
+
+<svg width="100%" height="100%" 
+     xmlns:xlink="http://www.w3.org/1999/xlink" 
+     xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <filter id="turbFilter4" in="SourceImage" 
+           filterUnits="objectBoundingBox">
+      <feTurbulence baseFrequency="0.05" numOctaves="1" 
+                    result="turbulenceOut1"/> 
+        <feDisplacementMap in="SourceGraphic" in2="turbulenceOut1" 
+                           xChannelSelector="B" yChannelSelector="B"
+                           scale="2"/> 
+
+      <feDiffuseLighting in="SourceGraphic" 
+                         diffuseConstant="2" 
+                         surfaceScale="20" 
+                         style="lighting-color:#FF88FF;">
+         <feSpotLight x="30" y="60" z="80" 
+                      pointsAtX="30" pointsAtY="30" pointsAtZ="0" 
+                      specularExponent="1"/>
+     </feDiffuseLighting>
+   </filter>
+
+  <pattern id="checkerPattern1" 
+           width="10" height="10"
+           patternUnits="userSpaceOnUse">
+     <rect fill="blue"
+           x="0"  y="0"  width="5" height="5"/> 
+     <rect fill="red"
+           x="5" y="0"  width="5" height="5"/> 
+     <rect fill="red"
+           x="0"  y="5" width="5" height="5"/> 
+     <rect fill="blue"
+           x="5" y="5" width="5" height="5"/> 
+  </pattern>
+
+  <pattern id="checkerPattern2" 
+           width="10" height="10"
+           patternUnits="userSpaceOnUse">
+     <rect fill="red"
+           x="0"  y="0"  width="5" height="5"/> 
+     <rect fill="yellow"
+           x="5" y="0"  width="5" height="5"/> 
+     <rect fill="yellow"
+           x="0"  y="5" width="5" height="5"/> 
+     <rect fill="red"
+           x="5" y="5" width="5" height="5"/> 
+  </pattern>
+
+  <path id="qBezierCurve" 
+        d="m0,0 Q100,0 200,200 T300,200 z"
+        fill="red" 
+        stroke-dasharray="2 2 2 2"
+        style="stroke:blue;stroke-width:4;"/>
+
+  <path id="leftArc1" 
+        d="m0,0 Q100,0 200,200 T300,200
+                a60,60 0 0,0 -25,100 z"
+        fill="blue" 
+        opacity=".5" 
+        style="fill:url(#checkerPattern2)"/>
+
+  <circle id="blackDot"
+          cx="0" cy="0" r="5" fill="black"/>
+</defs>
+
+<g id="gc" transform="translate(50,40) scale(2,2)" 
+   filter="url(#turbFilter4)">  
+    <use xlink:href="#qBezierCurve" x="0" y="0"/>
+    <use xlink:href="#blackDot"     x="300" y="200"/>
+    <use xlink:href="#blackDot"     x="275" y="300"/>
+    <use xlink:href="#leftArc1"     x="0" y="0"/>
+</g>
+</svg>
+

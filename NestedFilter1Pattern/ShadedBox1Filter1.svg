@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN" 
+  "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+
+<svg width="100%" height="100%"
+     xmlns:xlink="http://www.w3.org/1999/xlink" 
+     xmlns="http://www.w3.org/2000/svg">
+
+<!-- ============================ -->
+<defs>
+  <filter id="turbFilter4" in="SourceImage" 
+           filterUnits="objectBoundingBox">
+      <feTurbulence baseFrequency="0.05" numOctaves="1" 
+                    result="turbulenceOut1"/> 
+        <feDisplacementMap in="SourceGraphic" in2="turbulenceOut1" 
+                           xChannelSelector="B" yChannelSelector="B"
+                           scale="30"/> 
+   </filter>
+</defs>
+
+<g id="gc" transform="translate(50,100)"
+   filter="url(#turbFilter4)">  
+  <!-- front face -->
+  <rect x="0" y="0" width="200" height="120"
+        fill="red" stroke="white" stroke-width="1">
+         <animate attributeName="fill" 
+                  attributeType="XML" dur="8s"
+                  from="red"
+                    to="green"
+                  fill="freeze"
+                  repeatCount="2"/>
+  </rect>
+
+  <!-- top face -->
+  <path d="M0,0 l200,0 50,-30 -200,0 -50,30"
+        fill="green" stroke="white" stroke-width="1">
+         <animate attributeName="fill" 
+                  attributeType="XML" dur="8s"
+                  from="green"
+                    to="blue"
+                  fill="freeze"
+                  repeatCount="2"/>
+  </path>
+
+  <!-- right face -->
+  <path d="M200,0 l50,-30 0,120 -50,30"
+        fill="blue" stroke="white" stroke-width="1">
+         <animate attributeName="fill" 
+                  attributeType="XML" dur="8s"
+                  from="blue"
+                    to="red"
+                  fill="freeze"
+                  repeatCount="2"/>
+  </path>
+</g>
+</svg>

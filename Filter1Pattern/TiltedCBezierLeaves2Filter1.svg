@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20001102//EN" 
+ "http://www.w3.org/TR/2000/CR-SVG-20001102/DTD/svg-20001102.dtd"> 
+
+<svg xmlns="http://www.w3.org/2000/svg" 
+     xmlns:xlink="http://www.w3.org/1999/xlink"> 
+ <defs>
+  <filter id="turbFilter4" in="SourceImage" 
+           filterUnits="objectBoundingBox">
+      <feTurbulence baseFrequency="0.15" numOctaves="5" 
+                    result="turbulenceOut1"/> 
+        <feDisplacementMap in="SourceGraphic" in2="turbulenceOut1" 
+                           xChannelSelector="B" yChannelSelector="B"
+                           scale="80"/> 
+   </filter>
+
+     <radialGradient id="blueCircle" 
+                     gradientUnits="objectBoundingBox"
+                     fx="30%" fy="30%">
+       <stop offset="0%"   style="stop-color:#FFFFFF"/>
+       <stop offset="40%"  style="stop-color:#0000AA"/>
+       <stop offset="100%" style="stop-color:#000066"/>
+     </radialGradient>
+
+     <radialGradient id="redCircle" 
+                     gradientUnits="objectBoundingBox"
+                     fx="30%" fy="30%">
+       <stop offset="0%"   style="stop-color:#FFFFFF"/>
+       <stop offset="40%"  style="stop-color:#AA0000"/>
+       <stop offset="100%" style="stop-color:#660000"/>
+     </radialGradient>
+
+  <pattern id="multiPattern" 
+           width="50" height="50"
+           patternUnits="userSpaceOnUse">
+
+   <linearGradient id="repeatedGradientDefinition"
+      x1="0" y1="0" x2="50" y2="0" 
+      gradientUnits="userSpaceOnUse" spreadMethod="repeat">
+      <stop offset="0%"   style="stop-color:#FF0000"/>
+      <stop offset="100%" style="stop-color:#000000"/>
+   </linearGradient> 
+
+   <rect 
+      style="fill:url(#repeatedGradientDefinition)"
+      x="0" y="0" width="50" height="50"/>
+   </pattern>
+
+   <g id="cBezierLeaf">
+     <path id="leftSide"
+           d="m100,0 C200,150 350,250 200,300"
+           style="fill:url(#blueCircle);stroke:blue;stroke-width:4;"/>
+
+     <path id="rightSide"
+           d="m300,0 C200,150 50,250 200,300"
+           style="fill:url(#multiPattern);stroke:blue;stroke-width:4;"/>
+   </g>
+</defs>
+
+<g id="leaf" transform="translate(0,50)"> 
+   <use xlink:href="#cBezierLeaf" x="100" y="0"/>
+</g>
+
+<g id="leaf2" transform="translate(-200,50) scale(.8,.8)" 
+   filter="url(#turbFilter4)">  
+   <use xlink:href="#cBezierLeaf" x="200" y="0"/>
+</g>
+</svg>

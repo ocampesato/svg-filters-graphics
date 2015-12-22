@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN" 
+  "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+
+<svg xmlns="http://www.w3.org/2000/svg" 
+     xmlns:xlink="http://www.w3.org/1999/xlink" 
+     width="100%" height="100%"> 
+<defs>
+  <filter id="turbFilter4" in="SourceImage" 
+           filterUnits="objectBoundingBox">
+      <feTurbulence baseFrequency="0.05" numOctaves="0" 
+                    result="turbulenceOut1"/> 
+        <feDisplacementMap in="SourceGraphic" in2="turbulenceOut1" 
+                           xChannelSelector="B" yChannelSelector="B"
+                           scale="20"/> 
+   </filter>
+
+  <radialGradient id="shadeCircle" 
+                  gradientUnits="objectBoundingBox"
+                  fx="30%" fy="30%">
+    <stop offset="0%"   style="stop-color:#BBBBBB"/>
+    <stop offset="40%"  style="stop-color:#888888"/>
+    <stop offset="100%" style="stop-color:#333333"/>
+  </radialGradient>
+
+  <g id="shadowBox">
+    <path id="frontFace"
+          d="m0,0 100,0 0,80 -100,0"
+          fill="url(#shadeCircle)"/> 
+
+    <path id="topFace"
+          d="m0,0 l100,0 60,-30 -100,0"
+          fill="url(#shadeCircle)"/> 
+
+    <path id="rightFace"
+          d="m100,0 l60,-30 0,80 -60,30"
+          fill="url(#shadeCircle)"/> 
+  </g>
+</defs>
+
+<g id="gc" transform="translate(80,120) scale(2,2)"
+   filter="url(#turbFilter4)">   
+  <use xlink:href="#shadowBox" x="0" y="0"/>
+</g>
+</svg>
+

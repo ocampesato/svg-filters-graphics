@@ -1,0 +1,140 @@
+<?xml version='1.0' encoding='iso-8859-1'?>
+
+<svg xmlns="http://www.w3.org/2000/svg" 
+     xmlns:xlink="http://www.w3.org/1999/xlink" 
+     width="100%" height="100%" onload="init(evt)">
+ <script><![CDATA[
+  var currentX    = 0;
+  var currentY    = 0;
+  var maxDuration = 10000;
+  var xCoord      = 0;
+  var yCoord      = 0;
+  var minorAxis   = 20;
+  var majorAxis   = 40;
+  var strokeWidth = 4;
+  var strokeColor = "red;";
+  var style       = "";
+  var currentTick = 0;
+  var maxCount    = Math.floor(maxDuration/shortPause);
+  var index       = 0;
+  var stripCount  = 12;
+  var stripWidth  = Math.floor(maxCount/stripCount);
+  var rVal        = 0;
+  var gVal        = 0;
+  var bVal        = 0;
+
+  var vertexCount = 4;
+  var bFixedXPts  = Array(vertexCount);
+  var bFixedYPts  = Array(vertexCount);
+  var bezierXPts  = Array(maxCount+1);
+  var bezierYPts  = Array(maxCount+1);
+
+  var theTimeout  = null;
+  var ellipseNode = null;
+  var gcNode      = null;
+  var svgDocument = null;
+  var svgNS       = "http://www.w3.org/2000/svg";
+
+  function init(evt) {
+     svgDocument = evt.target.ownerDocument; 
+     gcNode = svgDocument.getElementById("gc")
+
+     initializeBezierPoints();
+     renderCurve();
+  }
+
+  function initializeBezierPoints() {
+     // end-points and control points...
+     bFixedXPts[0] = 10;
+     bFixedXPts[1] = 120;
+     bFixedXPts[2] = 150;
+     bFixedXPts[3] = 400;
+
+     bFixedYPts[0] = 200;
+     bFixedYPts[1] = 120;
+     bFixedYPts[2] = 350;
+     bFixedYPts[3] = 200;
+
+     // intermediate Bezier points... 
+     for(var x=0; x<maxCount; x++) {
+        d = x*shortPause/maxDuration;
+
+        bezierXPts[x] = (1-d)*(1-d)*(1-d)*bFixedXPts[0]+
+                         3*d*(1-d)*(1-d)*bFixedXPts[1]+
+                         3*d*d*(1-d)*bFixedXPts[2]+
+                         d*d*d*bFixedXPts[3];
+
+        bezierYPts[x] = (1-d)*(1-d)*(1-d)*bFixedYPts[0]+
+                         3*d*(1-d)*(1-d)*bFixedYPts[1]+
+                         3*d*d*(1-d)*bFixedYPts[2]+
+                         d*d*d*bFixedYPts[3];
+     }
+  }
+
+  function renderCurve() {
+     if( ++currentTick < maxCount ) {
+        addEllipse();
+
+        theTimeOut = setTimeout("renderCurve()", 
+                                shortPause)
+     } else {
+        stopAnimation();
+     }
+  }
+
+  function addEllipse() {
+     currentX = bezierXPts[currentTick];
+     currentY = bezierYPts[currentTick];
+
+     rVal = 0; gVal = 0; bVal = 0; 
+
+     index = Math.floor(currentTick/stripWidth);
+     if( index % 4 == 0 ) {
+        rVal = (currentTick%stripWidth)*255/stripWidth;
+     } else if( index % 4 == 1 ) {
+        gVal = (currentTick%stripWidth)*255/stripWidth;
+     } else if( index % 4 == 2 ) {
+        bVal = (currentTick%stripWidth)*255/stripWidth;
+     } else {
+        rVal = (currentTick%stripWidth)*255/stripWidth;
+        gVal = (currentTick%stripWidth)*255/stripWidth;
+     }
+
+     strokeColor = "rgb("+rVal+","+gVal+","+bVal+")";
+
+     style  = "fill:none;stroke:"+strokeColor;
+     style += ";stroke-width:"+strokeWidth;
+
+     ellipseNode = svgDocument.createElementNS(svgNS, "ellipse");
+     ellipseNode.setAttribute("cx", currentX); 
+     ellipseNode.setAttribute("cy", currentY); 
+     ellipseNode.setAttribute("rx", majorAxis); 
+     ellipseNode.setAttribute("ry", minorAxis); 
+     ellipseNode.setAttribute("style", style); 
+     gcNode.appendChild(ellipseNode);
+  }
+
+  function stopAnimation() {
+     window.clearTimeout(theTimeout);
+  }
+
+]]></script>
+<!-- ============================ -->
+<defs>
+  <filter id="turbFilter4" in="SourceImage" 
+           filterUnits="objectBoundingBox">
+      <feTurbulence baseFrequency="0.05" numOctaves="0" 
+                    result="turbulenceOut1"/> 
+        <feDisplacementMap in="SourceGraphic" in2="turbulenceOut1" 
+                           xChannelSelector="B" yChannelSelector="B"
+                           scale="100"/> 
+   </filter>
+</defs>
+
+<g id="gc" transform="translate(50,0)" filter="url(#turbFilter4)">  
+  <path id="bezier1"
+        d="M10,200 C120,120 150,350 400,200" 
+        stroke="blue" fill="none"/>
+</g>
+</svg>
+

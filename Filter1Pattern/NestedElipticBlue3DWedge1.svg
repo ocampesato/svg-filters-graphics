@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN" 
+  "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+
+<svg xmlns="http://www.w3.org/2000/svg" 
+     xmlns:xlink="http://www.w3.org/1999/xlink"> 
+ <defs>
+  <filter id="turbFilter4" in="SourceImage" 
+           filterUnits="objectBoundingBox">
+      <feTurbulence baseFrequency="0.15" numOctaves="2" 
+                    result="turbulenceOut1"/> 
+        <feDisplacementMap in="SourceGraphic" in2="turbulenceOut1" 
+                           xChannelSelector="B" yChannelSelector="B"
+                           scale="80"/> 
+   </filter>
+
+     <radialGradient id="blueCircle" 
+                     gradientUnits="objectBoundingBox"
+                     fx="30%" fy="30%">
+       <stop offset="0%"   style="stop-color:#FFFFFF"/>
+       <stop offset="40%"  style="stop-color:#0000AA"/>
+       <stop offset="100%" style="stop-color:#000066"/>
+     </radialGradient>
+      
+     <radialGradient id="redCircle" 
+                     gradientUnits="objectBoundingBox"
+                     fx="30%" fy="30%">
+       <stop offset="0%"   style="stop-color:#FFFFFF"/>
+       <stop offset="40%"  style="stop-color:#AA0000"/>
+       <stop offset="100%" style="stop-color:#660000"/>
+     </radialGradient>
+      
+  <path id="topFace"
+        d="m0,0 l0,-80 
+                a200,200 0 0,0 100,50
+                l200,-120 -300,70"
+        fill="url(#blueCircle)" 
+        stroke="blue" stroke-width="2"/>
+
+  <path id="topFace2"
+        d="m0,0 l0,-80 
+                a200,200 0 0,0 100,50
+                l200,-120 -300,70"
+        fill="url(#redCircle)" 
+        stroke="blue" stroke-width="2"/>
+
+  <path id="rightFace"
+        d="m100,-30 l200,-120 
+                    l-200,200 
+                    a200,200 0 0,1 0,-80"
+        fill="url(#blueCircle)" 
+        stroke="blue" stroke-width="2"/>
+
+  <path id="rightFace2"
+        d="m100,-30 l200,-120 
+                    l-200,200 
+                    a200,200 0 0,1 0,-80"
+        fill="url(#redCircle)" 
+        stroke="blue" stroke-width="2"/>
+
+  <ellipse id="blueEllipse"
+        cx="0" cy="0" rx="10" ry="20"
+        fill="url(#blueCircle)" 
+        stroke="blue" stroke-width="2"/>
+
+  <path id="frontFace"
+        d="m0,0 l0,-80 
+                a200,200 0 0,0 100,50
+                a200,200 0 0,0 0,80
+                a200,200 0 0,1 -100,-50
+                l0,-80"
+        fill="url(#blueCircle)" 
+        stroke="blue" stroke-width="2"/>
+
+  <path id="frontFace2"
+        d="m0,0 l0,-80 
+                a200,200 0 0,0 100,50
+                a200,200 0 0,0 0,80
+                a200,200 0 0,1 -100,-50
+                l0,-80"
+        fill="url(#redCircle)" 
+        stroke="blue" stroke-width="2"/>
+</defs>
+
+<g id="gc" transform="translate(50,200)" 
+   filter="url(#turbFilter4)">  
+   <use xlink:href="#topFace"       x="0"  y="0"/>
+   <use xlink:href="#rightFace"     x="0"  y="0"/>
+   <use xlink:href="#frontFace"     x="0"  y="0"/>
+</g>
+
+<g id="gc" transform="translate(50,200) scale(.5,.5)" 
+   filter="url(#turbFilter4)">  
+   <use xlink:href="#frontFace2"    x="40"  y="-20"/>
+   <use xlink:href="#rightFace2"    x="130" y="-20"/>
+   <use xlink:href="#topFace2"      x="70"  y="-70"/>
+</g>
+
+</svg>

@@ -1,0 +1,110 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN" 
+  "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+
+<svg width="100%" height="100%" onload="init(evt)"
+     xmlns="http://www.w3.org/2000/svg">
+
+  <script type="text/ecmascript"> 
+    <![CDATA[
+    var width         = 800;
+    var height        = 500;
+    var basePointX    = 250;
+    var basePointY    = 150;
+    var currentX      = 0;
+    var currentY      = 0;
+    var offsetX       = 0;
+    var offsetY       = 0;
+    var radius        = 0;
+    var Constant      = 0.25;
+    var angle         = 0;
+    var maxAngle      = 720;
+    var angleDelta    = 4;
+    var strokeWidth   = 1;
+    var style         = "";
+    var points        = "";
+    var rVal          = 0;
+    var gVal          = 0;
+    var bVal          = 0;
+ 
+    var polygonNode   = null;
+    var svgDocument   = null;
+    var gcNode        = null;
+    var bgNode        = null;
+    var svgNS         = "http://www.w3.org/2000/svg";
+
+    function init(evt) {
+       svgDocument = evt.target.ownerDocument; 
+       gcNode = svgDocument.getElementById("gc")
+
+       drawBackground();
+    }
+
+    function drawBackground(event) {
+       points = "";
+
+       for(angle=0; angle<maxAngle; angle+=angleDelta) {
+          radius = Constant*angle;
+  
+          offsetX = radius*Math.cos(angle*Math.PI/180);
+          offsetY = radius*Math.sin(angle*Math.PI/180);
+
+          currentX = basePointX+offsetX;
+          currentY = basePointY-offsetY;
+
+          points += currentX+","+currentY+" ";
+       }
+
+       style = "fill:url(#radialGradient1)";
+
+       bgNode = svgDocument.createElementNS(svgNS, "polygon");
+       bgNode.setAttribute("style",style);
+       bgNode.setAttribute("points", points);
+       gcNode.appendChild(bgNode);
+    }
+  ]]> </script>
+
+<!-- ============================ -->
+<defs>
+  <filter id="turbFilter4" in="SourceImage" 
+           filterUnits="objectBoundingBox">
+      <feTurbulence baseFrequency="0.35" numOctaves="2" 
+                    result="turbulenceOut1"/> 
+        <feDisplacementMap in="SourceGraphic" in2="turbulenceOut1" 
+                           xChannelSelector="B" yChannelSelector="B"
+                           scale="30"/> 
+   </filter>
+
+   <radialGradient id="radialGradient1" 
+                   gradientUnits="userSpaceOnUse"
+                   cx="400" cy="200" r="300" 
+                   fx="400" fy="200">
+     <stop offset="0"    stop-color="white"/>
+     <stop offset=".149" stop-color="red"/>
+     <stop offset=".15"  stop-color="blue"/>
+     <stop offset=".849" stop-color="red"/>
+     <stop offset=".85"  stop-color="blue"/>
+     <stop offset="1"    stop-color="black"/>
+   </radialGradient>
+
+   <radialGradient id="radialGradient2" 
+                   gradientUnits="userSpaceOnUse"
+                   cx="400" cy="200" r="300" 
+                   fx="400" fy="200">
+     <stop offset="0"    stop-color="yellow"/>
+     <stop offset=".149" stop-color="red"/>
+     <stop offset=".15"  stop-color="white"/>
+     <stop offset=".549" stop-color="red"/>
+     <stop offset=".55"  stop-color="white"/>
+     <stop offset="1"    stop-color="black"/>
+   </radialGradient>
+</defs>
+
+<g id="gc" transform="translate(10,10)" 
+   filter="url(#turbFilter4)">  
+  <rect x="0" y="0" 
+        width="800" height="500" 
+        fill="none" stroke="none"/>
+</g>
+</svg>
+
